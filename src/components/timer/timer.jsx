@@ -33,6 +33,27 @@ class Timer extends React.Component {
     })
     this.createStages();
     this.createExercise();
+    // this.timerID = setInterval(
+    //   () => this.tick(),
+    //   1000
+    // );
+    // this.interval = setInterval(
+    //   () => this.countdownTimer(),
+    //   1000
+    // )
+  }
+
+  componentDidUpdate() {
+    // if (this.state.isTimerRunning) {
+    //   this.interval = setInterval(
+    //     () => this.countdownTimer(),
+    //     1000
+    //   );
+    // }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
   }
 
   createWorkoutTotal() {
@@ -119,52 +140,60 @@ class Timer extends React.Component {
     this.setState({ 
       isTimerRunning: true,
       timerPaused: false,
-      interval: setInterval(this.countdownTimer(), 1000),
     });
+    this.interval = setInterval(
+      () => this.countdownTimer(),
+      1000
+    );
   }
 
   timerPause() {
-    const { interval } = this.state;
     console.log('Paused');
     this.setState({
       isTimerRunning: false,
       timerPaused: true,
-    });
-    clearInterval(interval);
+    }, clearInterval(this.interval));
   }
 
   timerReset() {
-    const { interval, workoutTime } = this.state;
+    const { workoutTime } = this.state;
     console.log('Reset');
     this.setState({
       isTimerRunning: false,
       timerPaused: false,
       totalWorkoutTime: workoutTime,
       round: 0,
-    });
-    clearInterval(interval);
+    }, clearInterval(this.interval));
   }
 
   countdownTimer() {
-    const { totalWorkoutTime, interval, round } = this.state;
+    const { totalWorkoutTime, round } = this.state;
     if (totalWorkoutTime === 0 && this.generateTotalRounds() === round) {
       this.setState({
         isTimerRunning: false,
         timerPaused: false,
-      }, clearInterval(interval));
+      }, clearInterval(this.interval));
       this.roundStep();
     } else if (totalWorkoutTime === 0 && this.generateTotalRounds() !== round) {
-      clearInterval(interval);
-      this.setState({
-        interval: setInterval(this.countdownTimer(), 1000),
-      }, this.roundStep());
+      clearInterval(this.interval);
+      this.roundStep();
+      this.interval = setInterval(
+        () => this.countdownTimer(),
+        1000
+      );
     } else if (totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
-      clearInterval(interval);
+      clearInterval(this.interval);
       this.setState({
-        interval: setInterval(this.countdownTimer(), 1000),
-      }, totalWorkoutTime--);
+        totalWorkoutTime: totalWorkoutTime - 1,
+      });
+      this.interval = setInterval(
+        () => this.countdownTimer(),
+        1000
+      );
     } else {
-      totalWorkoutTime--;
+      this.setState({
+        totalWorkoutTime: totalWorkoutTime - 1,
+      });
     }
   }
 
