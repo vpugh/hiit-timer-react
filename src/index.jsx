@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom'
 import './index.scss';
-import TimerContainer from './timerContainer';
+import App from './App';
 
-ReactDOM.render(<TimerContainer />, document.getElementById('app'));
+ReactDOM.render(
+  <Router>
+    <App />
+  </Router>,
+  document.getElementById('app')
+);

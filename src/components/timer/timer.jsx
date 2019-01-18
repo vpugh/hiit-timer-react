@@ -35,7 +35,7 @@ class Timer extends React.Component {
     this.createExercise();
   }
 
-  generateWorkoutTotal() {
+  createWorkoutTotal() {
     const { totalWorkoutTime } = this.state;
     const sec = totalWorkoutTime >= 10 ? totalWorkoutTime : '0' + totalWorkoutTime;
     return ":" + sec;
@@ -45,6 +45,20 @@ class Timer extends React.Component {
     const { numberOfExercise, rounds } = this.state;
     const combinedStage = numberOfExercise * 2;
     return combinedStage * rounds - 1;
+  }
+
+  createStages() {
+    const { rounds, stages } = this.state;
+    for (let i = 0; i < rounds; i += 1) {
+      stages.push(i);
+    }
+  }
+
+  createExercise() {
+    const { numberOfExercise, exercise } = this.state;
+    for (let i = 0; i < numberOfExercise * 2; i += 1) {
+      exercise.push(i);
+    }
   }
 
   // Methods
@@ -82,28 +96,18 @@ class Timer extends React.Component {
     }, this.createStages());
   }
 
-  createStages() {
-    const { rounds, stages } = this.state;
-    for (let i = 0; i < rounds; i += 1) {
-      stages.push(i);
-    }
-  }
-
-  createExercise() {
-    const { numberOfExercise, exercise } = this.state;
-    for (let i = 0; i < numberOfExercise * 2; i += 1) {
-      exercise.push(i);
-    }
-  }
-
   updateTotalWork() {
-    const { totalWorkoutTime, workoutTime } = this.state;
-    return totalWorkoutTime = workoutTime;
+    const { workoutTime } = this.state;
+    this.setState({
+      totalWorkoutTime: workoutTime,
+    });
   }
 
   updateTotalRest() {
-    const { totalRestTime, restTime } = this.state;
-    return totalRestTime = restTime;
+    const { restTime } = this.state;
+    this.setState({
+      totalRestTime: restTime,
+    });
   }
 
   isEven(num) {
@@ -115,53 +119,53 @@ class Timer extends React.Component {
     this.setState({ 
       isTimerRunning: true,
       timerPaused: false,
-      interval: setInterval(this.coundtownTimer(), 1000),
+      interval: setInterval(this.countdownTimer(), 1000),
     });
   }
 
   timerPause() {
+    const { interval } = this.state;
     console.log('Paused');
     this.setState({
       isTimerRunning: false,
       timerPaused: true,
     });
-    clearInterval(this.state.interval);
+    clearInterval(interval);
   }
 
   timerReset() {
+    const { interval, workoutTime } = this.state;
     console.log('Reset');
     this.setState({
       isTimerRunning: false,
       timerPaused: false,
-      totalWorkoutTime: this.state.workoutTime,
+      totalWorkoutTime: workoutTime,
       round: 0,
     });
-    clearInterval(this.state.interval);
+    clearInterval(interval);
   }
 
-  coundtownTimer() {
+  countdownTimer() {
     const { totalWorkoutTime, interval, round } = this.state;
-    if (totalWorkoutTime === 0 && this.generateTotalRounds() == round) {
+    if (totalWorkoutTime === 0 && this.generateTotalRounds() === round) {
       this.setState({
         isTimerRunning: false,
         timerPaused: false,
-      })
-      clearInterval(interval);
+      }, clearInterval(interval));
       this.roundStep();
-    }
-    if (totalWorkoutTime === 0 && this.generateTotalRounds() !== round) {
+    } else if (totalWorkoutTime === 0 && this.generateTotalRounds() !== round) {
+      clearInterval(interval);
       this.setState({
-        interval: setInterval(this.coundtownTimer(), 1000),
+        interval: setInterval(this.countdownTimer(), 1000),
       }, this.roundStep());
+    } else if (totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
       clearInterval(interval);
-    }
-    if (totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
       this.setState({
-        interval: setInterval(this.coundtownTimer(), 1000),
+        interval: setInterval(this.countdownTimer(), 1000),
       }, totalWorkoutTime--);
-      clearInterval(interval);
+    } else {
+      totalWorkoutTime--;
     }
-    totalWorkoutTime--;
   }
 
   roundStep() {
@@ -188,7 +192,7 @@ class Timer extends React.Component {
     } = this.state;
 
     return (
-      <div className="main">
+      <>
         <Stage
           round={round}
           numberOfExercise={numberOfExercise}
@@ -199,13 +203,13 @@ class Timer extends React.Component {
           numberOfExercise={numberOfExercise}
           exercise={exercise}
         />
-        <div className="timer">{this.generateWorkoutTotal()}</div>
+        <div className="timer">{this.createWorkoutTotal()}</div>
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
           <button onClick={this.timerReset}>Restart <span className="fa fa-redo"></span></button>
         </div>
-      </div>
+      </>
     )
   }
 }

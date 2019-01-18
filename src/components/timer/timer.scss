@@ -9,7 +9,7 @@
   width: 100vw;
   top: 0;
   left: 0;
- .main {
+ main {
     width: 90%;
     box-shadow: 2px 3px 15px rgba(0, 0, 0, 0.4),
       4px 8px 45px 6px rgba(0, 0, 0, 0.2);
@@ -28,7 +28,7 @@
       margin: 0 auto;
     }
   }
-  .main button {
+  main button {
     background-color: $primary-color;
     color: darken($primary-color, 40%);
     padding: 15px 34px;
