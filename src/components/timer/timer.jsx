@@ -9,8 +9,8 @@ class Timer extends React.Component {
     super(props);
     this.state = {
       totalRounds: 3, // Amt of exercise rounds
-      exercises: 1, // Number of different exercises
-      namedExercise: ['squats', 'push-ups', 'burpees'],
+      exercises: 3, // Number of different exercises
+      namedExercise: ['squats', 'push-ups', 'burpees', 'pull-ups'],
       exerciseTime: 4, // Duration of each exercise
       restTime: 2, // rest between each exercise
       totalWorkoutTime: '', // total amount of workout - # exercies x amt of rounds
@@ -26,6 +26,7 @@ class Timer extends React.Component {
     this.timerReset = this.timerReset.bind(this);
     this.countdown = this.countdown.bind(this);
     this.isEven = this.isEven.bind(this);
+    this.createExercise = this.createExercise.bind(this);
   }
 
   /// test exercise object
@@ -61,8 +62,8 @@ class Timer extends React.Component {
   }
 
   createExercise() {
-    const { exercises, totalExercises } = this.state;
-    for (let i = 0; i < exercises * 2; i += 1) {
+    const { exercises, totalExercises, namedExercise } = this.state;
+    for (let i = 0; i < namedExercise.length * 2; i += 1) {
       if (i) { totalExercises.push(i) }
     }
   }
@@ -92,9 +93,9 @@ class Timer extends React.Component {
   exerciseRoundTime() {
     const { totalWorkoutTime } = this.state;
     if (totalWorkoutTime >= 10) {
-      return `:${totalWorkoutTime}`;
+      return `${totalWorkoutTime}s`;
     } else {
-      return `:0${totalWorkoutTime}`;
+      return `0${totalWorkoutTime}s`;
     }
   }
 
@@ -173,28 +174,34 @@ class Timer extends React.Component {
       totalExercises,
       isTimerRunning,
       nameTestArray,
+      namedExercise,
     } = this.state;
 
     return (
-      <>
-        <Stage
-          currentRound={currentRound}
-          exercises={exercises}
-          totalRounds={totalRounds}
-        />
+      <div style={{ width: '70%', textAlign: "left", margin: '0 auto' }}>
+        <div className="timer">{this.exerciseRoundTime()}</div>
+        <div className="buttons">
+          {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
+          {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
+        </div>
+        {this.state.totalWorkoutTime}
+        {this.state.totalRounds}
+        {this.state.currentRound}
         <TimerState
           currentRound={currentRound}
           exercises={exercises}
           totalExercises={totalExercises}
           nameTestArray={nameTestArray}
+          createExerciseNames={this.createExerciseNames}
+          namedExercise={namedExercise}
+          totalRounds={totalRounds}
         />
-        <div className="timer">{this.exerciseRoundTime()}</div>
-        <div className="buttons">
-          {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
-          {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
-          <button onClick={this.timerReset}>Restart <span className="fa fa-redo"></span></button>
-        </div>
-      </>
+        <Stage
+          currentRound={currentRound}
+          exercises={exercises}
+          totalRounds={totalRounds}
+        />
+      </div>
     )
   }
 }
