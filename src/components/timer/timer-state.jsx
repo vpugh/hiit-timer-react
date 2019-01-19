@@ -2,19 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class TimerState extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.currentState = this.currentState.bind(this);
-  }
 
   currentState() {
-    const { round, exercise, numberOfExercise } = this.props;
-    const position = exercise[round],
-    circuit = Math.ceil((+round + 1) / (numberOfExercise * 2)),
-    truePosition = exercise[round] + 1 <= numberOfExercise * 2
-    ? position
-    : exercise[round - numberOfExercise * 2 * (circuit - 1)];
+    const { currentRound, totalExercises, exercises } = this.props;
+    const position = `${totalExercises[currentRound]}`;
+    const truePosition = position + 1 < exercises * 2;
     if (truePosition % 2 === 0) {
       return "Exercise";
     } else {
@@ -29,5 +21,11 @@ class TimerState extends React.Component {
     );
   }
 }
+
+TimerState.propTypes = {
+  currentRound: PropTypes.number.isRequired,
+  totalExercises: PropTypes.array.isRequired,
+  exercises: PropTypes.number.isRequired,
+};
 
 export default TimerState;

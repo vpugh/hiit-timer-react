@@ -8,29 +8,28 @@ class Timer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rounds: 3,
-      numberOfExercise: 4,
-      workoutTime: 20,
-      restTime: 10,
-      totalWorkoutTime: '',
-      totalRestTime: '',
+      totalRounds: 3, // Amt of exercise rounds
+      exercises: 1, // Number of different exercises
+      exerciseTime: 4, // Duration of each exercise
+      restTime: 2, // rest between each exercise
+      totalWorkoutTime: '', // total amount of workout - # exercies x amt of rounds
+      totalRestTime: '', // total rest in workout - time of rest x (amt of rounds - 1)
+      currentRound: 0, // current exercise round
+      totalStages: [],
+      totalExercises: [],
       isTimerRunning: false,
-      interval: null,
-      isModalOpen: false,
-      round: 0,
-      stages: [],
-      exercise: [],
+      isTimerPaused: true,
     };
     this.timerPlay = this.timerPlay.bind(this);
     this.timerPause = this.timerPause.bind(this);
     this.timerReset = this.timerReset.bind(this);
+    this.countdown = this.countdown.bind(this);
+    this.isEven = this.isEven.bind(this);
   }
 
   componentDidMount() {
-    const { workoutTime } = this.state;
-    this.setState({
-      totalWorkoutTime: workoutTime,
-    })
+    const { exerciseTime } = this.state;
+    this.setState({ totalWorkoutTime: exerciseTime });
     this.createStages();
     this.createExercise();
     // this.timerID = setInterval(
@@ -55,184 +54,127 @@ class Timer extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
-
-  createWorkoutTotal() {
-    const { totalWorkoutTime } = this.state;
-    const sec = totalWorkoutTime >= 10 ? totalWorkoutTime : '0' + totalWorkoutTime;
-    return ":" + sec;
-  }
-
-  generateTotalRounds() {
-    const { numberOfExercise, rounds } = this.state;
-    const combinedStage = numberOfExercise * 2;
-    return combinedStage * rounds - 1;
-  }
-
+  
+  // Generate rounds and Exercise Arrays
   createStages() {
-    const { rounds, stages } = this.state;
-    for (let i = 0; i < rounds; i += 1) {
-      stages.push(i);
+    const { totalRounds, totalStages } = this.state;
+    for (let i = 0; i < totalRounds; i += 1) {
+      if (i) { totalStages.push(i) }
     }
   }
 
   createExercise() {
-    const { numberOfExercise, exercise } = this.state;
-    for (let i = 0; i < numberOfExercise * 2; i += 1) {
-      exercise.push(i);
+    const { exercises, totalExercises } = this.state;
+    for (let i = 0; i < exercises * 2; i += 1) {
+      if (i) { totalExercises.push(i) }
     }
   }
-
-  // Methods
-
-  openModal() {
-    this.setState({
-      isModalOpen: true,
-    });
+  
+  // generate total # rounds
+  roundTotal() {
+    const { exercises, totalRounds } = this.state;
+    return (exercises * 2) * totalRounds - 1;
   }
-
-  closeModal() {
-    this.setState({
-      isModalOpen: false,
-    });
-  }
-
-  handleInputChange(value, name) {
-    if (name === 'workTime') {
-      this.setState({
-        workoutTime: value,
-      }, this.updateTotalWork());
+  
+  // Control exercise time display
+  exerciseRoundTime() {
+    const { totalWorkoutTime } = this.state;
+    if (totalWorkoutTime >= 10) {
+      return `:${totalWorkoutTime}`;
+    } else {
+      return `:0${totalWorkoutTime}`;
     }
-    if (name === 'restTime') {
-      this.setState({
-        restTime: value,
-      }, this.updateTotalRest());
-    }
-    if (name === 'amtExercise') {
-      this.setState({
-        numberOfExercise: value,
-      }, this.createExercise());
-    }
-    this.setState({
-      rounds: value,
-    }, this.createStages());
-  }
-
-  updateTotalWork() {
-    const { workoutTime } = this.state;
-    this.setState({
-      totalWorkoutTime: workoutTime,
-    });
-  }
-
-  updateTotalRest() {
-    const { restTime } = this.state;
-    this.setState({
-      totalRestTime: restTime,
-    });
   }
 
   isEven(num) {
-    return num % 2 === 0
+    return num % 2 === 0;
   }
 
+  // Timer Controls
+
   timerPlay() {
-    console.log('Play');
-    this.setState({ 
+    this.setState({
       isTimerRunning: true,
-      timerPaused: false,
+      isTimerPaused: false,
     });
-    this.interval = setInterval(
-      () => this.countdownTimer(),
-      1000
-    );
+    this.interval = setInterval(() => this.countdown(),1000);
   }
 
   timerPause() {
-    console.log('Paused');
     this.setState({
       isTimerRunning: false,
-      timerPaused: true,
+      isTimerPaused: true,
     }, clearInterval(this.interval));
   }
-
+  
   timerReset() {
-    const { workoutTime } = this.state;
-    console.log('Reset');
     this.setState({
       isTimerRunning: false,
-      timerPaused: false,
-      totalWorkoutTime: workoutTime,
+      isTimerPaused: false,
+      totalWorkoutTime: this.state.exerciseTime,
       round: 0,
     }, clearInterval(this.interval));
   }
 
-  countdownTimer() {
-    const { totalWorkoutTime, round } = this.state;
-    if (totalWorkoutTime === 0 && this.generateTotalRounds() === round) {
-      this.setState({
-        isTimerRunning: false,
-        timerPaused: false,
-      }, clearInterval(this.interval));
-      this.roundStep();
-    } else if (totalWorkoutTime === 0 && this.generateTotalRounds() !== round) {
+  countdown() {
+    const { totalWorkoutTime, currentRound } = this.state;
+    const correctCurrentRound = +currentRound + 1;
+    if (totalWorkoutTime === 0 && this.roundTotal() === correctCurrentRound) {
+      // Timer is done. TotalTime is 0, totalRounds equals the currentNumber
+      this.timerReset();
+    } else if (totalWorkoutTime === 0 && this.roundTotal() !== correctCurrentRound) {
+      // End of current round, onto next round. Clear ticking (interval), set next round, turn ticking back on.
       clearInterval(this.interval);
-      this.roundStep();
-      this.interval = setInterval(
-        () => this.countdownTimer(),
-        1000
-      );
-    } else if (totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
-      clearInterval(this.interval);
-      this.setState({
-        totalWorkoutTime: totalWorkoutTime - 1,
-      });
-      this.interval = setInterval(
-        () => this.countdownTimer(),
-        1000
-      );
+      this.nextRound();
+      this.interval = setInterval(() => this.countdown(),1000);
+    } else if ( totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
+      // Time low warning, triggers extra behaviour (sounds)
+      // ADD SOUNDS *Some kind of alarm bell ringing*
+      this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
     } else {
-      this.setState({
-        totalWorkoutTime: totalWorkoutTime - 1,
-      });
+      this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
     }
   }
 
-  roundStep() {
-    const { round, totalWorkoutTime, restTime, totalRounds, workoutTime } = this.state;
-    round++;
-    if (round == totalRounds) {
-      this.timerReset();
+  nextRound() {
+    const { currentRound, restTime, exerciseTime } = this.state;
+    // Round always goes up
+    this.setState({ currentRound: +currentRound + 1 });
+
+    // Checks which to display, exercise or rest
+    if (!this.isEven(currentRound)) {
+      // 1,3,5,7,etc (ODD) are exercise
+      this.setState({ totalWorkoutTime: exerciseTime });
     }
-    if (this.isEven(round) == true) {
-      totalWorkoutTime === workoutTime;
-    }
-    if (this.isEven(round) == false) {
-      totalWorkoutTime === restTime;
+    if (this.isEven(currentRound)) {
+      // 2,4,6,8,etc (EVEN) are rest
+      this.setState({ totalWorkoutTime: restTime });
     }
   }
+  
 
   render() {
     const {
-      round,
-      numberOfExercise,
-      rounds,
-      exercise,
+      currentRound,
+      exercises,
+      totalRounds,
+      totalExercises,
       isTimerRunning,
     } = this.state;
 
     return (
       <>
         <Stage
-          round={round}
-          numberOfExercise={numberOfExercise}
-          rounds={rounds}
+          currentRound={currentRound}
+          exercises={exercises}
+          totalRounds={totalRounds}
         />
         <TimerState
-          round={round}
-          numberOfExercise={numberOfExercise}
-          exercise={exercise}
+          currentRound={currentRound}
+          exercises={exercises}
+          totalExercises={totalExercises}
         />
-        <div className="timer">{this.createWorkoutTotal()}</div>
+        <div className="timer">{this.exerciseRoundTime()}</div>
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}

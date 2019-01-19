@@ -2,16 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Stage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.currentStage = this.currentStage.bind(this);
-  }
 
   currentStage() {
-    const { round, numberOfExercise, rounds } = this.props;
-    const circuit = Math.ceil((+round + 1) / (numberOfExercise * 2));
-    return "Round " + circuit + "/" + rounds;
+    const { currentRound, exercises, totalRounds } = this.props;
+    const circuit = Math.ceil((+currentRound + 1) / (exercises * 2));
+    return `Round ${circuit}/${totalRounds}`;
   }
 
   render() {
@@ -22,9 +17,9 @@ class Stage extends React.Component {
 }
 
 Stage.propTypes = {
-  round: PropTypes.number.isRequired,
-  numberOfExercise: PropTypes.number.isRequired,
-  rounds: PropTypes.number.isRequired,
+  currentRound: PropTypes.number.isRequired,
+  exercises: PropTypes.number.isRequired,
+  totalRounds: PropTypes.number.isRequired,
 }
 
 export default Stage;
