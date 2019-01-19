@@ -32,6 +32,27 @@ class Timer extends React.Component {
     this.setState({ totalWorkoutTime: exerciseTime });
     this.createStages();
     this.createExercise();
+    // this.timerID = setInterval(
+    //   () => this.tick(),
+    //   1000
+    // );
+    // this.interval = setInterval(
+    //   () => this.countdownTimer(),
+    //   1000
+    // )
+  }
+
+  componentDidUpdate() {
+    // if (this.state.isTimerRunning) {
+    //   this.interval = setInterval(
+    //     () => this.countdownTimer(),
+    //     1000
+    //   );
+    // }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
   }
   
   // Generate rounds and Exercise Arrays
