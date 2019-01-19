@@ -4,8 +4,9 @@
   "description": "A React-based HIIT (High-Intensity Interval Training) Timer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --open"
+    "build": "react-scripts build",
+    "start": "webpack-dev-server --open",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
