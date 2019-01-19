@@ -4,6 +4,10 @@
   "description": "A React-based HIIT (High-Intensity Interval Training) Timer",
   "main": "index.js",
   "scripts": {
+    "build": "NODE_ENV=production npm run create",
+    "create": "webpack",
+    "webpack": "webpack-dev-server",
+    "postinstall": "npm run build",
     "start": "webpack-dev-server --open"
   },
   "repository": {
