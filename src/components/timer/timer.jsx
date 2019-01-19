@@ -10,6 +10,7 @@ class Timer extends React.Component {
     this.state = {
       totalRounds: 3, // Amt of exercise rounds
       exercises: 1, // Number of different exercises
+      namedExercise: ['squats', 'push-ups', 'burpees'],
       exerciseTime: 4, // Duration of each exercise
       restTime: 2, // rest between each exercise
       totalWorkoutTime: '', // total amount of workout - # exercies x amt of rounds
@@ -27,28 +28,24 @@ class Timer extends React.Component {
     this.isEven = this.isEven.bind(this);
   }
 
+  /// test exercise object
+  // {
+  //   "name": "squat",
+  //   "exerciseTime": "20",
+  //   "restTime": "10",
+  // },
+  // {
+  //   "name": "burpees",
+  //   "exerciseTime": "60",
+  //   "restTime": "15",
+  // },
+
   componentDidMount() {
     const { exerciseTime } = this.state;
     this.setState({ totalWorkoutTime: exerciseTime });
     this.createStages();
     this.createExercise();
-    // this.timerID = setInterval(
-    //   () => this.tick(),
-    //   1000
-    // );
-    // this.interval = setInterval(
-    //   () => this.countdownTimer(),
-    //   1000
-    // )
-  }
-
-  componentDidUpdate() {
-    // if (this.state.isTimerRunning) {
-    //   this.interval = setInterval(
-    //     () => this.countdownTimer(),
-    //     1000
-    //   );
-    // }
+    this.createExerciseNames();
   }
 
   componentWillUnmount() {
@@ -68,6 +65,21 @@ class Timer extends React.Component {
     for (let i = 0; i < exercises * 2; i += 1) {
       if (i) { totalExercises.push(i) }
     }
+  }
+
+  createExerciseNames() {
+    const { namedExercise } = this.state;
+    const nameTest = [];
+    for (let i = 0; i < namedExercise.length; i += 1) {
+      if (i === namedExercise.length - 1) {
+        nameTest.push(namedExercise[i]);
+      } else {
+        nameTest.push(namedExercise[i], 'rest');
+      }
+    }
+    this.setState({
+      nameTestArray: nameTest,
+    });
   }
   
   // generate total # rounds
@@ -112,7 +124,7 @@ class Timer extends React.Component {
       isTimerRunning: false,
       isTimerPaused: false,
       totalWorkoutTime: this.state.exerciseTime,
-      round: 0,
+      currentRound: 0,
     }, clearInterval(this.interval));
   }
 
@@ -160,6 +172,7 @@ class Timer extends React.Component {
       totalRounds,
       totalExercises,
       isTimerRunning,
+      nameTestArray,
     } = this.state;
 
     return (
@@ -173,6 +186,7 @@ class Timer extends React.Component {
           currentRound={currentRound}
           exercises={exercises}
           totalExercises={totalExercises}
+          nameTestArray={nameTestArray}
         />
         <div className="timer">{this.exerciseRoundTime()}</div>
         <div className="buttons">

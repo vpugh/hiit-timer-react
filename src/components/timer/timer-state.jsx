@@ -3,21 +3,20 @@ import PropTypes from 'prop-types';
 
 class TimerState extends React.Component {
 
-  currentState() {
-    const { currentRound, totalExercises, exercises } = this.props;
-    const position = `${totalExercises[currentRound]}`;
-    const truePosition = position + 1 < exercises * 2;
-    if (truePosition % 2 === 0) {
-      return "Exercise";
-    } else {
-      return "Rest";
+  namedState() {
+    const { currentRound, nameTestArray } = this.props;
+    console.log(currentRound);
+    if (nameTestArray) {
+      return nameTestArray[currentRound];
     }
   }
 
   render() {
 
     return (
-      <div className="state">{this.currentState()}</div>
+      <>
+        <div className="state">{this.namedState()}</div>
+      </>
     );
   }
 }
