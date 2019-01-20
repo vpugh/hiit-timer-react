@@ -7,6 +7,11 @@ const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, `.env`),
+      safe: false,
+      systemvars: true,
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),
