@@ -3,12 +3,5 @@
   "routes": {
     "/**": "index.html"
   },
-  "headers": {
-    "/**": {
-      "Cache-Control": "no-store, no-cache"
-    },
-    "/assets/**": {
-      "Cache-Control": "public, max-age=512000"
-    }
-  }
+  "clean_urls": true
 }
