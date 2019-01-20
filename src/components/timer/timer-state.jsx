@@ -4,53 +4,48 @@ import PropTypes from 'prop-types';
 class TimerState extends React.Component {
 
   namedState() {
-    const { currentRound, nameTestArray, totalExercises, namedExercise, totalRounds } = this.props;
-    console.log('State', currentRound, namedExercise.length, totalExercises);
-    const r = namedExercise.length / totalRounds;
-    console.log('Level', r, namedExercise.length * 2, totalRounds);
-    if (nameTestArray && currentRound < ((namedExercise.length * 2) - 1)) {
-      if (currentRound % 2 === 0) {
-        return 'odd' + nameTestArray[currentRound];
-      } else {
-        return 'even' + nameTestArray[currentRound];
-      }
+    const { currentRound, nameTestArray, namedExercise } = this.props;
+    const circuit = Math.ceil((currentRound + 1) / (namedExercise.length * 2));
+    if (nameTestArray[currentRound + 1] <= namedExercise.length * 2) {
+      return nameTestArray[currentRound];
     } else {
-      return 'round 2';
+      return nameTestArray[currentRound - namedExercise.length * 2 * (circuit - 1)];
     }
-    // if (nameTestArray) {
-    //   return nameTestArray[totalExercises];
-    // }
   }
 
   upcomingState() {
-    const { nameTestArray, totalExercises } = this.props;
-    console.log('upcoming', nameTestArray);
+    const { currentRound, nameTestArray, namedExercise } = this.props;
+    const circuit = Math.ceil((currentRound + 1) / (namedExercise.length * 2));
+    // {nameTestArray.map((test, i) => (
+    //   i > this.props.currentRound && (
+    //     <li key={i}>{test}</li>
+    //   )
+    // ))}
+  }
+
+  currentStage() {
+    const { currentRound, namedExercise, totalRounds } = this.props;
+    const circuit = Math.ceil((+currentRound + 1) / (namedExercise.length * 2));
+    return `Round ${circuit}/${totalRounds}`;
   }
 
   render() {
     const {
-      namedExercise,
+      nameTestArray,
     } = this.props;
     return (
       <>
-        <h3
-          style={{ marginBottom: '0', marginTop: '3rem', textTransform: 'uppercase', fontSize: '1rem', letterSpacing: '1.3px'}}
-        >Current Exercise</h3>
+        <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
         <p className="state">{this.namedState()}</p>
-        <h3
-          style={{ marginBottom: '0', marginTop: '3rem', textTransform: 'uppercase', fontSize: '1rem', letterSpacing: '1.3px'}}
-        >Up Next</h3>
-        {/* <ul>
-          {namedExercise.map((test, i) => <li key={i}>{test}</li>)}
-        </ul> */}
-        <ul className="upcoming">
-          {namedExercise.map((test, i) => (
+        <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
+        <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
+          {nameTestArray.map((test, i) => (
             i > this.props.currentRound && (
               <li key={i}>{test}</li>
             )
           ))}
         </ul>
-        {/* <p className="state" style={{ fontSize: '1.8rem' }}>{this.upcomingState()}</p> */}
+        <p className="state" style={{ fontSize: '1.8rem' }}>{this.upcomingState()}</p>
       </>
     );
   }
@@ -59,7 +54,7 @@ class TimerState extends React.Component {
 TimerState.propTypes = {
   currentRound: PropTypes.number.isRequired,
   totalExercises: PropTypes.array.isRequired,
-  exercises: PropTypes.number.isRequired,
+  namedExercise: PropTypes.array.isRequired,
 };
 
 export default TimerState;

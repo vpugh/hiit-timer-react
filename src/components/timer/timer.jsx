@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './timer.scss';
-import Stage from './stage';
 import TimerState from './timer-state';
 
 class Timer extends React.Component {
@@ -9,8 +8,7 @@ class Timer extends React.Component {
     super(props);
     this.state = {
       totalRounds: 3, // Amt of exercise rounds
-      exercises: 3, // Number of different exercises
-      namedExercise: ['squats', 'push-ups', 'burpees', 'pull-ups'],
+      namedExercise: ['squats', 'pushups', 'burpees'],
       exerciseTime: 4, // Duration of each exercise
       restTime: 2, // rest between each exercise
       totalWorkoutTime: '', // total amount of workout - # exercies x amt of rounds
@@ -18,6 +16,7 @@ class Timer extends React.Component {
       currentRound: 0, // current exercise round
       totalStages: [],
       totalExercises: [],
+      nameTestArray: [],
       isTimerRunning: false,
       isTimerPaused: true,
     };
@@ -44,9 +43,9 @@ class Timer extends React.Component {
   componentDidMount() {
     const { exerciseTime } = this.state;
     this.setState({ totalWorkoutTime: exerciseTime });
+    this.createExerciseNames();
     this.createStages();
     this.createExercise();
-    this.createExerciseNames();
   }
 
   componentWillUnmount() {
@@ -62,7 +61,7 @@ class Timer extends React.Component {
   }
 
   createExercise() {
-    const { exercises, totalExercises, namedExercise } = this.state;
+    const { totalExercises, namedExercise } = this.state;
     for (let i = 0; i < namedExercise.length * 2; i += 1) {
       if (i) { totalExercises.push(i) }
     }
@@ -72,7 +71,7 @@ class Timer extends React.Component {
     const { namedExercise } = this.state;
     const nameTest = [];
     for (let i = 0; i < namedExercise.length; i += 1) {
-      if (i === namedExercise.length - 1) {
+      if (i === namedExercise.length) {
         nameTest.push(namedExercise[i]);
       } else {
         nameTest.push(namedExercise[i], 'rest');
@@ -85,8 +84,9 @@ class Timer extends React.Component {
   
   // generate total # rounds
   roundTotal() {
-    const { exercises, totalRounds } = this.state;
-    return (exercises * 2) * totalRounds - 1;
+    const { namedExercise, totalRounds } = this.state;
+    console.log('rt', namedExercise, namedExercise.length, namedExercise.length * 2, totalRounds - 1);
+    return (namedExercise.length * 2) * totalRounds - 1;
   }
   
   // Control exercise time display
@@ -169,7 +169,6 @@ class Timer extends React.Component {
   render() {
     const {
       currentRound,
-      exercises,
       totalRounds,
       totalExercises,
       isTimerRunning,
@@ -178,27 +177,17 @@ class Timer extends React.Component {
     } = this.state;
 
     return (
-      <div style={{ width: '70%', textAlign: "left", margin: '0 auto' }}>
+      <div className="timer-body">
         <div className="timer">{this.exerciseRoundTime()}</div>
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
         </div>
-        {this.state.totalWorkoutTime}
-        {this.state.totalRounds}
-        {this.state.currentRound}
         <TimerState
           currentRound={currentRound}
-          exercises={exercises}
           totalExercises={totalExercises}
           nameTestArray={nameTestArray}
-          createExerciseNames={this.createExerciseNames}
           namedExercise={namedExercise}
-          totalRounds={totalRounds}
-        />
-        <Stage
-          currentRound={currentRound}
-          exercises={exercises}
           totalRounds={totalRounds}
         />
       </div>

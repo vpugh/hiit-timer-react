@@ -1,12 +1,6 @@
 .main-nav {
   text-align: center;
-  padding: 20px 0;
-  @media (min-width: 992px) {
-    position: absolute;
-    right: 40px;
-    top: 30px;
-    text-align: left;
-  }
+  padding: 50px 0 20px 0;
 
   ul {
     padding: 0;
@@ -26,10 +20,10 @@
     transition: 300ms ease-in-out;
     border-bottom: 2px solid transparent;
     text-decoration: none;
-    color: #000;
+    color: #fff;
     &:hover {
       border-color: initial;
-      color: rgba(0, 0, 0, 0.25);
+      color: rgba(255, 255, 255, 0.5);
     }
   }
 
