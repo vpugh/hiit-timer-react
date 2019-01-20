@@ -16,7 +16,8 @@
   },
   "keywords": [
     "react",
-    "timer"
+    "timer",
+    "heroku"
   ],
   "author": "Tori Pugh",
   "license": "ISC",
@@ -54,5 +55,8 @@
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
+  },
+  "engines": {
+    "node": "8.11"
   }
 }
