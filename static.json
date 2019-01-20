@@ -1,8 +1,6 @@
 {
   "root": "dist/",
-  "clean_urls": true,
   "routes": {
-    "/assets/*": "/assets/",
     "/**": "index.html"
   },
   "headers": {
@@ -12,6 +10,5 @@
     "/assets/**": {
       "Cache-Control": "public, max-age=512000"
     }
-  },
-  "https_only": true
+  }
 }
