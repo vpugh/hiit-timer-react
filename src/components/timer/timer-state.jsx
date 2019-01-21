@@ -30,9 +30,6 @@ class TimerState extends React.Component {
   }
 
   render() {
-    const {
-      nameTestArray,
-    } = this.props;
     return (
       <>
         <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
