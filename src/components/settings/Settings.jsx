@@ -7,27 +7,55 @@ class Settings extends Component {
     this.state = {
       exercises: [],
       restTime: '10',
-      workout: '30',
+      workoutTime: '30',
       rounds: 3,
     }
     this.handleInput = this.handleInput.bind(this);
+    this.addExercised = this.addExercised.bind(this);
+  }
+
+  componentDidMount() {
+    const { restTime, workoutTime, rounds, exercises } = this.props;
+    if (restTime) { this.setState({ restTime })}
+    if (workoutTime) { this.setState({ workoutTime})}
+    if (rounds) { this.setState({ rounds })}
+    if (exercises) { this.setState({ exercises })}
+  }
+
+  componentDidUpdate(prevProps) {
+    const { restTime, workoutTime, rounds, exercises } = this.props;
+    if (prevProps.rounds !== this.state.rounds) { this.setState({ rounds }) }
+    if (prevProps.restTime !== this.state.restTime) { this.setState({ restTime }) }
+    if (prevProps.workoutTime !== this.state.workoutTime) { this.setState({ workoutTime }) }
+    if (prevProps.exercises !== this.state.exercises) { this.setState({ exercises }) }
   }
 
   handleInput(ev) {
     if (/^-?\d*$/.test(ev.target.value) === true) {
       this.setState({
         [ev.target.name]: ev.target.value,
-      })
+      }, this.props.handleNumberInputs(ev.target.value, ev.target.name))
     }
+  }
+
+  addExercised() {
+    const { exercises } = this.state;
+    const arr = [...exercises];
+    arr.push({ exercises: ''});
+    this.setState({
+      ...exercises,
+      exercise: arr,
+    })
   }
 
   render() {
     const {
       exercises,
       restTime,
-      workout,
+      workoutTime,
       rounds,
     } = this.state;
+    
     return (
       <div>
         <form>
@@ -38,19 +66,20 @@ class Settings extends Component {
             <input type="text" name="rounds" id="rounds" value={rounds} onChange={this.handleInput} />
           </div>
           <div className="form-inputs">
-            <label htmlFor="workout">Workout Time:</label>
-            <input type="text" name="workout" id="workout" value={workout} onChange={this.handleInput} />
+            <label htmlFor="workoutTime">Workout Time:</label>
+            <input type="text" name="workoutTime" id="workoutTime" value={workoutTime} onChange={this.handleInput} />
           </div>
           <div className="form-inputs">
             <label htmlFor="rest">Rest Time:</label>
             <input type="text" name="restTime" id="rest" value={restTime} onChange={this.handleInput} />
           </div>
+          {console.log(this.state.exercises, this.state.exercise)}
           <div className="exercises">
             <h3>Exercises:</h3>
             <div className="form-inputs">
               <label htmlFor="exercises">Exercise {exercises.length + 1}:</label>
               <input type="text" name="exercises" id="exercises" placeholder={`Exercise ${exercises.length + 1}`} value={exercises} onChange={this.handleInput} />
-              <button className="btn">Add Exercise</button>
+              <button className="btn" onClick={this.addExercised} type="button">Add Exercise</button>
             </div>
           </div>
         </form>
