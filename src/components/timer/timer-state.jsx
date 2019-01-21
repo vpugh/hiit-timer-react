@@ -14,13 +14,13 @@ class TimerState extends React.Component {
   }
 
   upcomingState() {
-    const { currentRound, nameTestArray, namedExercise } = this.props;
-    const circuit = Math.ceil((currentRound + 1) / (namedExercise.length * 2));
-    // {nameTestArray.map((test, i) => (
-    //   i > this.props.currentRound && (
-    //     <li key={i}>{test}</li>
-    //   )
-    // ))}
+    const { nameTestArray, totalRounds } = this.props;
+    const list = [].concat(...Array(totalRounds).fill(nameTestArray))
+    return list.slice(0, -1);
+  }
+
+  makeRepeated(arr, repeats) {
+    Array.from({ length: repeats }, () => arr).flat();
   }
 
   currentStage() {
@@ -39,13 +39,13 @@ class TimerState extends React.Component {
         <p className="state">{this.namedState()}</p>
         <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
         <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
-          {nameTestArray.map((test, i) => (
+          {this.upcomingState().map((test, i) => (
             i > this.props.currentRound && (
               <li key={i}>{test}</li>
             )
           ))}
+          <div className="gradientback" />
         </ul>
-        <p className="state" style={{ fontSize: '1.8rem' }}>{this.upcomingState()}</p>
       </>
     );
   }

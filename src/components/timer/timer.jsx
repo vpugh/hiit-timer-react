@@ -85,7 +85,6 @@ class Timer extends React.Component {
   // generate total # rounds
   roundTotal() {
     const { namedExercise, totalRounds } = this.state;
-    console.log('rt', namedExercise, namedExercise.length, namedExercise.length * 2, totalRounds - 1);
     return (namedExercise.length * 2) * totalRounds - 1;
   }
   
@@ -95,7 +94,7 @@ class Timer extends React.Component {
     if (totalWorkoutTime >= 10) {
       return `${totalWorkoutTime}s`;
     } else {
-      return `0${totalWorkoutTime}s`;
+      return `${totalWorkoutTime}s`;
     }
   }
 
