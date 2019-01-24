@@ -6,9 +6,9 @@ class Settings extends Component {
     super(props);
     this.state = {
       exercises: [],
-      restTime: '10',
-      workoutTime: '30',
-      rounds: 3,
+      restTime: '',
+      workoutTime: '',
+      rounds: null,
     }
     this.handleInput = this.handleInput.bind(this);
     this.addExercised = this.addExercised.bind(this);

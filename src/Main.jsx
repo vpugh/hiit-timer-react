@@ -26,15 +26,27 @@ class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={Timer} />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <Timer {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} />
+            )}
+          />
           <Route
             exact
             path="/settings"
             render={(props) => (
-            <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} />
+              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} />
             )}
           />
-          <Route exact path="/login" component={Login} />
+          <Route
+            exact
+            path="/login"
+            render={(props) => (
+              <Login {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} />
+            )}
+          />
         </Switch>
       </main>
     );
