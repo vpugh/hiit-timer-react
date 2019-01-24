@@ -8,7 +8,8 @@
     "create": "webpack",
     "webpack": "webpack-dev-server",
     "start-dev": "NODE_ENV=dev webpack-dev-server --open",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
