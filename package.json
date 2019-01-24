@@ -4,12 +4,11 @@
   "description": "A React-based HIIT (High-Intensity Interval Training) Timer",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && npm run create",
+    "build": "rimraf dist && NODE_ENV=production npm run create",
     "create": "webpack",
-    "webpack": "webpack-dev-server",
-    "start-dev": "NODE_ENV=dev webpack-dev-server --open",
     "start": "webpack-dev-server --open",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "webpack": "webpack-dev-server"
   },
   "repository": {
     "type": "git",
