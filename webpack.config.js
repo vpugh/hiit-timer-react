@@ -10,9 +10,10 @@ console.log(`Using environment file ${process.env.NODE_ENV || 'dev'}`);
 module.exports = {
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, '.env'),
+      path: path.resolve(__dirname, './.env'),
       safe: false,
       systemvars: true,
+      silent: true,
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
@@ -21,9 +22,6 @@ module.exports = {
       filename: devMode ? '[name].css' : '[name].[hash].css',
       chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
     }),
-    new CopyWebpackPlugin([
-      { from: 'assets', to: 'assets' },
-    ]),
   ],
   entry: './src/index.jsx',
   output: {
