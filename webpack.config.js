@@ -10,7 +10,7 @@ console.log(`Using environment file ${process.env.NODE_ENV || 'dev'}`);
 module.exports = {
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, `./${process.env.NODE_ENV || 'dev'}`),
+      path: path.resolve(__dirname, '.env'),
       safe: false,
       systemvars: true,
     }),
@@ -28,7 +28,7 @@ module.exports = {
   entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'lf-bundle-[hash].js',
+    filename: 'bundle-[hash].js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
