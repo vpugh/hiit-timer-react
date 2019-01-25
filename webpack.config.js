@@ -1,84 +1,50 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
-const devMode = process.env.NODE_ENV !== 'production';
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html",
+  filename: "./index.html"
+});
 
 module.exports = {
-  plugins: [
-    new Dotenv({
-      path: path.resolve(__dirname, `.env`),
-      safe: false,
-      systemvars: true,
-    }),
-    new HtmlWebpackPlugin({
-      template: 'src/index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: devMode ? '[name].css' : '[name].[hash].css',
-      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
-    }),
-    new CopyWebpackPlugin([
-      { from: 'assets', to: 'assets' },
-    ]),
-  ],
-  entry: './src/index.jsx',
+  entry: "./src/index.jsx",
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'lf-bundle-[hash].js',
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'],
-    alias: {
-      '~': path.resolve(__dirname, 'src'),
-    },
+    path: path.resolve('dist'),
+    filename: 'bundled.js'
   },
   module: {
     rules: [
       {
         test: /\.(jsx?)$/,
-        use: 'babel-loader',
-        exclude: [/node_modules/],
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
       },
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.css$/,
         use: [
-          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-
-        ],
-        exclude: /node_modules/,
-
-      },
-      { 
-        test: /\.png$/, 
-        use: 'url-loader?mimetype=image/png'
-      },
-    ],
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "sass-loader"
+          },
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[name]_[local]_[hash:base64]",
+              sourceMap: true,
+              minimize: true
+            }
+          }
+        ]
+      }
+    ]
   },
-  mode: 'development',
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
-        },
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
-  },
-  devServer: {
-    port: 3000,
-    historyApiFallback: true,
-  },
+  plugins: [htmlPlugin],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  }
 };
