@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Timer from './components/timer/Timer';
-import Login from './components/login/Login';
+import Timer from './components/timer/timer';
+import Login from './components/login/login';
 import Settings from './components/settings/Settings';
 
 const Main = () => {
