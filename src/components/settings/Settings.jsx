@@ -8,7 +8,6 @@ class Settings extends Component {
       exerciseNumber: 1,
     }
     this.handleInput = this.handleInput.bind(this);
-    this.addExercise = this.addExercise.bind(this);
   }
 
   componentDidMount() {
@@ -36,14 +35,7 @@ class Settings extends Component {
     }
     this.props.handleTextInputs(ev);
   }
-
-  addExercise() {
-    const { exercises, exerciseNumber } = this.state;
-    this.setState({
-      exercises: exercises.concat('new value'),
-      exerciseNumber: exerciseNumber + 1,
-    });
-  }
+  
 
   render() {
     const {
@@ -74,12 +66,12 @@ class Settings extends Component {
             <h3>Exercises:</h3>
             <div className="form-inputs">
               {exercises.map((exercise, index) => ( 
-                <React.Fragment key={exercise}>
+                <React.Fragment key={exercise + index}>
                 <label htmlFor="exercises">Exercise {index + 1}:</label>
-                <input type="text" name={exercise} id={exercise} placeholder={`Exercise ${exercises.length + 1}`} value={exercises[index]} onChange={(e) => this.handleInput(e)} />
+                <input type="text" name={exercise} id={exercise} placeholder={`Exercise ${index + 1}`} value={exercises[index]} onChange={(e) => this.handleInput(e)} />
                 </React.Fragment>
               ))}
-              <button className="btn" onClick={this.addExercise} type="button">Add Exercise</button>
+              <button className="btn" onClick={this.props.addExercise} type="button">Add Exercise</button>
             </div>
           </div>
         </form>

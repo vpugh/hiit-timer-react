@@ -15,6 +15,7 @@ class Main extends Component {
     }
     this.handleNumberInputs = this.handleNumberInputs.bind(this);
     this.handleTextInputs = this.handleTextInputs.bind(this);
+    this.addExercise = this.addExercise.bind(this);
   }
 
   handleNumberInputs(value, name) {
@@ -28,6 +29,13 @@ class Main extends Component {
     this.setState({
       [ev.target.name]: ev.target.value,
     }, null);
+  }
+
+  addExercise() {
+    const { exercises } = this.state;
+    this.setState({
+      exercises: exercises.concat(''),
+    });
   }
   
   render() {
@@ -45,7 +53,7 @@ class Main extends Component {
             exact
             path="/settings"
             render={(props) => (
-              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} handleTextInputs={this.handleTextInputs} />
+              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} handleTextInputs={this.handleTextInputs} addExercise={this.addExercise} />
             )}
           />
           <Route
