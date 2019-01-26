@@ -5,13 +5,10 @@ class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      exercises: [],
-      restTime: '',
-      workoutTime: '',
-      rounds: null,
+      exerciseNumber: 1,
     }
     this.handleInput = this.handleInput.bind(this);
-    this.addExercised = this.addExercised.bind(this);
+    this.addExercise = this.addExercise.bind(this);
   }
 
   componentDidMount() {
@@ -31,21 +28,21 @@ class Settings extends Component {
   }
 
   handleInput(ev) {
+    console.log(ev.target.name, ev.target.value);
     if (/^-?\d*$/.test(ev.target.value) === true) {
       this.setState({
         [ev.target.name]: ev.target.value,
       }, this.props.handleNumberInputs(ev.target.value, ev.target.name))
     }
+    this.props.handleTextInputs(ev);
   }
 
-  addExercised() {
-    const { exercises } = this.state;
-    const arr = [...exercises];
-    arr.push({ exercises: ''});
+  addExercise() {
+    const { exercises, exerciseNumber } = this.state;
     this.setState({
-      ...exercises,
-      exercise: arr,
-    })
+      exercises: exercises.concat('new value'),
+      exerciseNumber: exerciseNumber + 1,
+    });
   }
 
   render() {
@@ -54,7 +51,7 @@ class Settings extends Component {
       restTime,
       workoutTime,
       rounds,
-    } = this.state;
+    } = this.props;
     
     return (
       <div>
@@ -73,13 +70,16 @@ class Settings extends Component {
             <label htmlFor="rest">Rest Time:</label>
             <input type="text" name="restTime" id="rest" value={restTime} onChange={this.handleInput} />
           </div>
-          {console.log(this.state.exercises, this.state.exercise)}
           <div className="exercises">
             <h3>Exercises:</h3>
             <div className="form-inputs">
-              <label htmlFor="exercises">Exercise {exercises.length + 1}:</label>
-              <input type="text" name="exercises" id="exercises" placeholder={`Exercise ${exercises.length + 1}`} value={exercises} onChange={this.handleInput} />
-              <button className="btn" onClick={this.addExercised} type="button">Add Exercise</button>
+              {exercises.map((exercise, index) => ( 
+                <React.Fragment key={exercise}>
+                <label htmlFor="exercises">Exercise {index + 1}:</label>
+                <input type="text" name={exercise} id={exercise} placeholder={`Exercise ${exercises.length + 1}`} value={exercises[index]} onChange={(e) => this.handleInput(e)} />
+                </React.Fragment>
+              ))}
+              <button className="btn" onClick={this.addExercise} type="button">Add Exercise</button>
             </div>
           </div>
         </form>

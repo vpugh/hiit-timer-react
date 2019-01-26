@@ -8,17 +8,25 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      restTime: 12,
-      workoutTime: 22,
-      rounds: 4,
-      exercises: [],
+      restTime: 10,
+      workoutTime: 20,
+      rounds: 3,
+      exercises: ["squats", "pullups"],
     }
     this.handleNumberInputs = this.handleNumberInputs.bind(this);
+    this.handleTextInputs = this.handleTextInputs.bind(this);
   }
 
   handleNumberInputs(value, name) {
     this.setState({
       [name]: value,
+    }, null);
+  }
+
+  handleTextInputs(ev) {
+    console.log(ev.target.name);
+    this.setState({
+      [ev.target.name]: ev.target.value,
     }, null);
   }
   
@@ -37,7 +45,7 @@ class Main extends Component {
             exact
             path="/settings"
             render={(props) => (
-              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} />
+              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} handleTextInputs={this.handleTextInputs} />
             )}
           />
           <Route

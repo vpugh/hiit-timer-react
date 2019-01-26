@@ -41,14 +41,13 @@ class Timer extends React.Component {
   // },
 
   componentDidMount() {
-    const { exerciseTime } = this.state;
     const { restTime, workoutTime, rounds, exercises } = this.props;
     console.log(restTime, workoutTime, rounds, exercises);
     if (restTime) { this.setState({ restTime })}
     if (workoutTime) { this.setState({ exerciseTime: workoutTime})}
     if (rounds) { this.setState({ rounds })}
     // if (exercises) { this.setState({ exercises })}
-    this.setState({ totalWorkoutTime: exerciseTime }, () => {
+    this.setState({ totalWorkoutTime: workoutTime }, () => {
       this.createExerciseNames();
       this.createStages();
       this.createExercise();
@@ -101,7 +100,7 @@ class Timer extends React.Component {
     if (totalWorkoutTime >= 10) {
       return `${totalWorkoutTime}s`;
     } else {
-      return `${totalWorkoutTime}s`;
+      return `0${totalWorkoutTime}s`;
     }
   }
 
