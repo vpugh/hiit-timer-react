@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './navigation.scss';
 
 const navigation = () => {
@@ -7,14 +7,14 @@ const navigation = () => {
     <nav className="main-nav">
       <ul>
         <li>
-          <Link to="/">Timer</Link>
+          <NavLink to="/" exact activeClassName='is-active'>Timer</NavLink>
         </li>
         <li>
-          <Link to="/settings">Settings</Link>
+          <NavLink to="/settings" activeClassName='is-active'>Settings</NavLink>
         </li>
-        <li>
-          <Link to="/login">Login/Signup</Link>
-        </li>
+        {/* <li>
+          <NavLink to="/login" activeClassName='is-active'>Login/Signup</NavLink>
+        </li> */}
       </ul>
     </nav>
   );

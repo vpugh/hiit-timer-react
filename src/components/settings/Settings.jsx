@@ -12,9 +12,7 @@ class Settings extends Component {
   }
 
   handleInput(ev) {
-    console.log(ev.target.name, ev.target.value);
     if (/^-?\d*$/.test(ev.target.value) === true) {
-      console.log(ev.target.name);
       this.setState({
         [ev.target.name]: ev.target.value,
       }, this.props.handleNumberInputs(ev.target.value, ev.target.name))

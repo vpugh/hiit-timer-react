@@ -25,6 +25,10 @@
       border-color: initial;
       color: rgba(255, 255, 255, 0.5);
     }
+    &.is-active {
+      border-color: initial;
+      color: rgba(255, 255, 255, 0.5);
+    }
   }
 
   select {

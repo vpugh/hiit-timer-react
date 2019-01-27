@@ -26,14 +26,9 @@ class Main extends Component {
 
   handleTextInputs(value, index) {
     const { exercises } = this.state;
-    const newExValue = exercises[index];
-    const list = {
-      ...exercises[index],
-      name: value,
-    }
-    console.log('textIn', this.state);
-    this.setState({ exercises: [list] })
-    console.log('textIn', this.state);
+    const name = 'name';
+    [...exercises][index][name] = value;
+    this.forceUpdate();
   }
 
   addExercise() {
