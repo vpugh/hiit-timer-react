@@ -11,7 +11,9 @@ class Main extends Component {
       restTime: 10,
       workoutTime: 20,
       rounds: 3,
-      exercises: ["squats", "pullups"],
+      exercises: [{
+        name: 'Squats'
+      }],
     }
     this.handleNumberInputs = this.handleNumberInputs.bind(this);
     this.handleTextInputs = this.handleTextInputs.bind(this);
@@ -19,23 +21,29 @@ class Main extends Component {
   }
 
   handleNumberInputs(value, name) {
-    this.setState({
-      [name]: value,
-    }, null);
+    this.setState({ [name]: value }, null);
   }
 
-  handleTextInputs(ev) {
-    console.log(ev.target.name);
-    this.setState({
-      [ev.target.name]: ev.target.value,
-    }, null);
+  handleTextInputs(value, index) {
+    const { exercises } = this.state;
+    const newExValue = exercises[index];
+    const list = {
+      ...exercises[index],
+      name: value,
+    }
+    console.log('textIn', this.state);
+    this.setState({ exercises: [list] })
+    console.log('textIn', this.state);
   }
 
   addExercise() {
     const { exercises } = this.state;
-    this.setState({
-      exercises: exercises.concat(''),
-    });
+    const newEx = exercises.concat({ name: ''});
+    this.setState({ exercises: newEx }, null);
+  }
+
+  activeClass(route) {
+    return location.pathname === route ? 'active' : null;
   }
   
   render() {

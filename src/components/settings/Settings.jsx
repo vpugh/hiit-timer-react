@@ -8,32 +8,23 @@ class Settings extends Component {
       exerciseNumber: 1,
     }
     this.handleInput = this.handleInput.bind(this);
-  }
-
-  componentDidMount() {
-    const { restTime, workoutTime, rounds, exercises } = this.props;
-    if (restTime) { this.setState({ restTime })}
-    if (workoutTime) { this.setState({ workoutTime})}
-    if (rounds) { this.setState({ rounds })}
-    if (exercises) { this.setState({ exercises })}
-  }
-
-  componentDidUpdate(prevProps) {
-    const { restTime, workoutTime, rounds, exercises } = this.props;
-    if (prevProps.rounds !== this.state.rounds) { this.setState({ rounds }) }
-    if (prevProps.restTime !== this.state.restTime) { this.setState({ restTime }) }
-    if (prevProps.workoutTime !== this.state.workoutTime) { this.setState({ workoutTime }) }
-    if (prevProps.exercises !== this.state.exercises) { this.setState({ exercises }) }
+    this.handleListedInput = this.handleListedInput.bind(this);
   }
 
   handleInput(ev) {
     console.log(ev.target.name, ev.target.value);
     if (/^-?\d*$/.test(ev.target.value) === true) {
+      console.log(ev.target.name);
       this.setState({
         [ev.target.name]: ev.target.value,
       }, this.props.handleNumberInputs(ev.target.value, ev.target.name))
     }
-    this.props.handleTextInputs(ev);
+  }
+
+  handleListedInput(ev) {
+    const { handleTextInputs } = this.props;
+    const index = ev.target.getAttribute('data-index');
+    handleTextInputs(ev.target.value, index);
   }
   
 
@@ -66,10 +57,10 @@ class Settings extends Component {
             <h3>Exercises:</h3>
             <div className="form-inputs">
               {exercises.map((exercise, index) => ( 
-                <React.Fragment key={exercise + index}>
-                <label htmlFor="exercises">Exercise {index + 1}:</label>
-                <input type="text" name={exercise} id={exercise} placeholder={`Exercise ${index + 1}`} value={exercises[index]} onChange={(e) => this.handleInput(e)} />
-                </React.Fragment>
+                <div key={exercise + index} style={{ margin: '10px 0' }}>
+                <label htmlFor="exercises" style={{ marginBottom: '6px' }}>Exercise {index + 1}:</label>
+                <input type="text" name={exercise.name} id={exercise.name} placeholder={`Exercise ${index + 1}`} value={exercises[index].name} data-index={index} onChange={this.handleListedInput} />
+                </div>
               ))}
               <button className="btn" onClick={this.props.addExercise} type="button">Add Exercise</button>
             </div>
