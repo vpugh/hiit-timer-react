@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './timer.scss';
 import TimerState from './timer-state';
+import NewBeep from '../../../assets/sounds/beep.mp3';
+import NewAirhorn from '../../../assets/sounds/airhorn.mp3';
+import NewDing from '../../../assets/sounds/ding.mp3';
 
 class Timer extends React.Component {
   constructor(props) {
@@ -20,25 +23,10 @@ class Timer extends React.Component {
       isTimerRunning: false,
       isTimerPaused: true,
     };
-    this.timerPlay = this.timerPlay.bind(this);
-    this.timerPause = this.timerPause.bind(this);
-    this.timerReset = this.timerReset.bind(this);
-    this.countdown = this.countdown.bind(this);
-    this.isEven = this.isEven.bind(this);
-    this.createExercise = this.createExercise.bind(this);
+    this.beep = new Audio('./assets/sounds/beep.mp3');
+    this.ding = new Audio(NewDing);
+    this.airhorn = new Audio(NewAirhorn);
   }
-
-  /// test exercise object
-  // {
-  //   "name": "squat",
-  //   "exerciseTime": "20",
-  //   "restTime": "10",
-  // },
-  // {
-  //   "name": "burpees",
-  //   "exerciseTime": "60",
-  //   "restTime": "15",
-  // },
 
   componentDidMount() {
     const { restTime, workoutTime, rounds, exercises } = this.props;
@@ -58,21 +46,21 @@ class Timer extends React.Component {
   }
   
   // Generate rounds and Exercise Arrays
-  createStages() {
+  createStages = () => {
     const { totalRounds, totalStages } = this.state;
     for (let i = 0; i < totalRounds; i += 1) {
       if (i) { totalStages.push(i) }
     }
   }
 
-  createExercise() {
+  createExercise = () => {
     const { totalExercises, namedExercise } = this.state;
     for (let i = 0; i < namedExercise.length * 2; i += 1) {
       if (i) { totalExercises.push(i) }
     }
   }
 
-  createExerciseNames() {
+  createExerciseNames = () => {
     const { namedExercise } = this.state;
     const nameTest = [];
     for (let i = 0; i < namedExercise.length; i += 1) {
@@ -103,13 +91,13 @@ class Timer extends React.Component {
     }
   }
 
-  isEven(num) {
+  isEven = (num) => {
     return num % 2 === 0;
   }
 
   // Timer Controls
 
-  timerPlay() {
+  timerPlay = () => {
     this.setState({
       isTimerRunning: true,
       isTimerPaused: false,
@@ -117,14 +105,14 @@ class Timer extends React.Component {
     this.interval = setInterval(() => this.countdown(),1000);
   }
 
-  timerPause() {
+  timerPause = () => {
     this.setState({
       isTimerRunning: false,
       isTimerPaused: true,
     }, clearInterval(this.interval));
   }
   
-  timerReset() {
+  timerReset = () => {
     this.setState({
       isTimerRunning: false,
       isTimerPaused: false,
@@ -133,7 +121,7 @@ class Timer extends React.Component {
     }, clearInterval(this.interval));
   }
 
-  countdown() {
+  countdown = () => {
     const { totalWorkoutTime, currentRound } = this.state;
     const correctCurrentRound = +currentRound + 1;
     if (totalWorkoutTime === 0 && this.roundTotal() === correctCurrentRound) {
@@ -147,13 +135,14 @@ class Timer extends React.Component {
     } else if ( totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
       // Time low warning, triggers extra behaviour (sounds)
       // ADD SOUNDS *Some kind of alarm bell ringing*
+      this.beepSound();
       this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
     } else {
       this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
     }
   }
 
-  nextRound() {
+  nextRound = () => {
     const { currentRound, restTime, exerciseTime } = this.state;
     // Round always goes up
     this.setState({ currentRound: +currentRound + 1 });
@@ -168,6 +157,11 @@ class Timer extends React.Component {
       this.setState({ totalWorkoutTime: restTime });
     }
   }
+
+  beepSound = () => {
+    this.beep.play();
+  }
+
   
 
   render() {

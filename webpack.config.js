@@ -56,6 +56,10 @@ module.exports = {
         test: /\.png$/, 
         use: 'url-loader?mimetype=image/png'
       },
+      {
+        test: /\.mp3$/,
+        loader: 'file-loader'
+      }
     ],
   },
   mode: 'development',
