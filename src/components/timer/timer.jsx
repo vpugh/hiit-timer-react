@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './timer.scss';
 import TimerState from './timer-state';
-import NewBeep from '../../../assets/sounds/beep.mp3';
-import NewAirhorn from '../../../assets/sounds/airhorn.mp3';
-import NewDing from '../../../assets/sounds/ding.mp3';
+import NewBeep from '../../assets/sounds/beep.mp3';
+import NewAirhorn from '../../assets/sounds/airhorn.mp3';
+import NewDing from '../../assets/sounds/ding.mp3';
 
 class Timer extends React.Component {
   constructor(props) {
@@ -23,9 +23,9 @@ class Timer extends React.Component {
       isTimerRunning: false,
       isTimerPaused: true,
     };
-    this.beep = new Audio('./assets/sounds/beep.mp3');
-    this.ding = new Audio(NewDing);
-    this.airhorn = new Audio(NewAirhorn);
+    this.beep = NewBeep;
+    this.ding = NewDing;
+    this.airhorn = NewAirhorn;
   }
 
   componentDidMount() {
@@ -159,7 +159,13 @@ class Timer extends React.Component {
   }
 
   beepSound = () => {
-    this.beep.play();
+    if (!this.state.isTimerRunning) {
+      this.refs.audio.play();
+      console.log(this.refs.audio);
+    } else {
+      this.refs.audio.pause();
+      console.log(this.refs.audio);
+    }
   }
 
   
@@ -177,6 +183,10 @@ class Timer extends React.Component {
     return (
       <div className="timer-body">
         <div className="timer">{this.exerciseRoundTime()}</div>
+        <audio ref="audio" src={this.beep} />
+        <audio controls>
+          <source src={this.beep} type="audio/mpeg" />
+        </audio>
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
