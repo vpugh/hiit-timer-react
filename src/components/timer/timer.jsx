@@ -168,6 +168,13 @@ class Timer extends React.Component {
     }
   }
 
+  sound = (mp3) => {
+    const audio_tag = React.createRef;
+    return (
+      <audio ref={audio_tag} src={mp3} controls autoPlay />
+    );
+  }
+
   
 
   render() {
@@ -183,10 +190,11 @@ class Timer extends React.Component {
     return (
       <div className="timer-body">
         <div className="timer">{this.exerciseRoundTime()}</div>
-        <audio ref="audio" src={this.beep} />
-        <audio controls>
+        {this.sound(NewBeep)}
+        {/* <audio ref="audio" src={this.beep} autoPlay /> */}
+        {/* <audio controls>
           <source src={this.beep} type="audio/mpeg" />
-        </audio>
+        </audio> */}
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
