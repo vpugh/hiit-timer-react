@@ -8,8 +8,8 @@ class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      restTime: 2,
-      workoutTime: 4,
+      restTime: 10,
+      workoutTime: 20,
       rounds: 3,
       exercises: [{
         name: 'Squats'
