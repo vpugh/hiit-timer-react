@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './timer.scss';
 import TimerState from './timer-state';
-import NewBeep from '../../assets/sounds/beep.mp3';
+import NewBeep from '../../assets/sounds/beep-v2.mp3';
 import NewAirhorn from '../../assets/sounds/airhorn.mp3';
 import NewDing from '../../assets/sounds/ding.mp3';
 
@@ -126,15 +126,15 @@ class Timer extends React.Component {
     const correctCurrentRound = +currentRound + 1;
     if (totalWorkoutTime === 0 && this.roundTotal() === correctCurrentRound) {
       // Timer is done. TotalTime is 0, totalRounds equals the currentNumber
+      this.hornSound();
       this.timerReset();
     } else if (totalWorkoutTime === 0 && this.roundTotal() !== correctCurrentRound) {
       // End of current round, onto next round. Clear ticking (interval), set next round, turn ticking back on.
+      this.dingSound();
       clearInterval(this.interval);
       this.nextRound();
       this.interval = setInterval(() => this.countdown(),1000);
-    } else if ( totalWorkoutTime <= 6 && totalWorkoutTime !== 0) {
-      // Time low warning, triggers extra behaviour (sounds)
-      // ADD SOUNDS *Some kind of alarm bell ringing*
+    } else if ( totalWorkoutTime <= 7 && totalWorkoutTime !== 0) {
       this.beepSound();
       this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
     } else {
@@ -159,12 +159,24 @@ class Timer extends React.Component {
   }
 
   beepSound = () => {
-    if (!this.state.isTimerRunning) {
+    if (this.state.isTimerRunning) {
       this.refs.audio.play();
-      console.log(this.refs.audio);
     } else {
       this.refs.audio.pause();
-      console.log(this.refs.audio);
+    }
+  }
+
+  dingSound = () => {
+    if (this.state.isTimerRunning) {
+      this.refs.audioDing.play();
+    } else {
+      this.refs.audioDing.pause();
+    }
+  }
+
+  hornSound = () => {
+    if (this.state.isTimerRunning) {
+      this.refs.audioHorn.play();
     }
   }
 
@@ -174,8 +186,6 @@ class Timer extends React.Component {
       <audio ref={audio_tag} src={mp3} controls autoPlay />
     );
   }
-
-  
 
   render() {
     const {
@@ -190,11 +200,9 @@ class Timer extends React.Component {
     return (
       <div className="timer-body">
         <div className="timer">{this.exerciseRoundTime()}</div>
-        {this.sound(NewBeep)}
-        {/* <audio ref="audio" src={this.beep} autoPlay /> */}
-        {/* <audio controls>
-          <source src={this.beep} type="audio/mpeg" />
-        </audio> */}
+        <audio ref="audio" src={NewBeep} preload="auto" />
+        <audio ref="audioDing" src={NewDing} preload="auto" />
+        <audio ref="audioHorn" src={NewAirhorn} preload="auto" />
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}

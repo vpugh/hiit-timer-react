@@ -25,7 +25,6 @@ module.exports = {
   ],
   entry: './src/index.jsx',
   output: {
-    publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle-[hash].js',
   },
@@ -59,7 +58,7 @@ module.exports = {
       },
       {
         test: /\.mp3$/,
-        loader: 'file-loader'
+        use: 'file-loader'
       }
     ],
   },
