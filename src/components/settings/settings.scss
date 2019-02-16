@@ -42,3 +42,9 @@ form {
   color: #fff;
   font-weight: bold;
 }
+
+.exercises {
+  @media (min-width: 992px) {
+    margin-top: 50px;
+  }
+}
