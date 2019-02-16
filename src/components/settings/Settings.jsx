@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
 import './settings.scss';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../redux/actions/action-types';
 
 class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
       exerciseNumber: 1,
+      restTime: '',
+      workTime: '',
+      rounds: '',
     }
     this.handleInput = this.handleInput.bind(this);
     this.handleListedInput = this.handleListedInput.bind(this);
+  }
+
+  componentDidMount() {
+    const { restTime, workTime, rounds } = this.props;
+    this.setState({
+      restTime,
+      workTime,
+      rounds,
+    })
   }
 
   handleInput(ev) {
@@ -29,28 +43,32 @@ class Settings extends Component {
   render() {
     const {
       exercises,
-      restTime,
-      workoutTime,
-      rounds,
+      onUpdateTime,
     } = this.props;
+    const {
+      restTime,
+      workTime,
+      rounds,
+    } = this.state;
     
     return (
       <div>
         <form>
           <h2>Settings</h2>
-          <p>Time should be inputed in seconds, ex: 1 min = 60 secs.</p>
+          <p>Time should be in seconds, ex: 1 min = 60s.</p>
           <div className="form-inputs">
             <label htmlFor="rounds">Rounds:</label>
             <input type="text" name="rounds" id="rounds" value={rounds} onChange={this.handleInput} />
           </div>
           <div className="form-inputs">
             <label htmlFor="workoutTime">Workout Time:</label>
-            <input type="text" name="workoutTime" id="workoutTime" value={workoutTime} onChange={this.handleInput} />
+            <input type="text" name="workTime" id="workoutTime" value={workTime} onChange={this.handleInput} />
           </div>
           <div className="form-inputs">
             <label htmlFor="rest">Rest Time:</label>
             <input type="text" name="restTime" id="rest" value={restTime} onChange={this.handleInput} />
           </div>
+          <button type="button" className="btn" onClick={() => onUpdateTime(workTime, restTime, rounds)}>Save Timer</button>
           <div className="exercises">
             <h3>Exercises:</h3>
             <div className="form-inputs">
@@ -69,4 +87,18 @@ class Settings extends Component {
   }
 }
 
-export default Settings;
+const mapStateToProps = state => {
+  return {
+    workTime: state.workTime,
+    restTime: state.restTime,
+    rounds: state.rounds
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onUpdateTime: (work, rest, rounds) => dispatch({ type: actionTypes.UPDATE_TIMER, workTime: work, restTime: rest, rounds: rounds })
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);

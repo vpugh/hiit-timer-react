@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import Timer from './components/timer/timer';
 import Login from './components/login/login';
 import Settings from './components/settings/Settings';
+import { connect } from 'react-redux';
+import * as actionTypes from './redux/actions/action-types';
 
 class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      restTime: 10,
-      workoutTime: 20,
-      rounds: 3,
       exercises: [{
         name: 'Squats'
       }],
@@ -49,21 +48,21 @@ class Main extends Component {
             exact
             path="/"
             render={(props) => (
-              <Timer {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} />
+              <Timer {...props} exercises={this.state.exercises} />
             )}
           />
           <Route
             exact
             path="/settings"
             render={(props) => (
-              <Settings {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} handleTextInputs={this.handleTextInputs} addExercise={this.addExercise} />
+              <Settings {...props} exercises={this.state.exercises} handleNumberInputs={this.handleNumberInputs} handleTextInputs={this.handleTextInputs} addExercise={this.addExercise} />
             )}
           />
           <Route
             exact
             path="/login"
             render={(props) => (
-              <Login {...props} restTime={this.state.restTime} workoutTime={this.state.workoutTime} rounds={this.state.rounds} exercises={this.state.exercises} />
+              <Login {...props} exercises={this.state.exercises} />
             )}
           />
         </Switch>
@@ -72,4 +71,18 @@ class Main extends Component {
   }
 }
 
-export default Main;
+const mapStateToProps = state => {
+  return {
+    workTime: state.workTime,
+    restTime: state.restTime,
+    rounds: state.rounds
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onFetchTimer: () => dispatch({ type: actionTypes.FETCH_TIMER }),
+  };
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
