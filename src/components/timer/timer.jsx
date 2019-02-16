@@ -43,7 +43,7 @@ class Timer extends React.Component {
   // Generate rounds and Exercise Arrays
   createStages = () => {
     const { totalStages } = this.state;
-    for (let i = 0; i < +this.props.rounds; i += 1) {
+    for (let i = 0; i < this.props.rounds; i += 1) {
       if (i) { totalStages.push(i) }
     }
   }
@@ -73,7 +73,7 @@ class Timer extends React.Component {
   // generate total # rounds
   roundTotal() {
     const { namedExercise } = this.state;
-    return (namedExercise.length * 2) * +this.props.rounds - 1;
+    return (namedExercise.length * 2) * this.props.rounds - 1;
   }
   
   // Control exercise time display
@@ -118,7 +118,7 @@ class Timer extends React.Component {
 
   countdown = () => {
     const { totalWorkoutTime, currentRound } = this.state;
-    const correctCurrentRound = +currentRound + 1;
+    const correctCurrentRound = currentRound + 1;
     if (totalWorkoutTime === 0 && this.roundTotal() === correctCurrentRound) {
       // Timer is done. TotalTime is 0, totalRounds equals the currentNumber
       this.hornSound();
@@ -131,16 +131,16 @@ class Timer extends React.Component {
       this.interval = setInterval(() => this.countdown(),1000);
     } else if ( totalWorkoutTime <= 7 && totalWorkoutTime !== 0) {
       this.beepSound();
-      this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
+      this.setState({ totalWorkoutTime: totalWorkoutTime - 1 });
     } else {
-      this.setState({ totalWorkoutTime: +totalWorkoutTime - 1 });
+      this.setState({ totalWorkoutTime: totalWorkoutTime - 1 });
     }
   }
 
   nextRound = () => {
     const { currentRound } = this.state;
     // Round always goes up
-    this.setState({ currentRound: +currentRound + 1 });
+    this.setState({ currentRound: currentRound + 1 });
 
     // Checks which to display, exercise or rest
     if (!this.isEven(currentRound)) {
@@ -206,11 +206,17 @@ class Timer extends React.Component {
           totalExercises={totalExercises}
           nameTestArray={nameTestArray}
           namedExercise={namedExercise}
-          totalRounds={+this.props.rounds}
+          totalRounds={this.props.rounds}
         />
       </div>
     )
   }
+}
+
+Timer.propTypes = {
+  workTime: PropTypes.number.isRequired,
+  restTime: PropTypes.number.isRequired,
+  rounds: PropTypes.number.isRequired,
 }
 
 const mapStateToProps = state => {
