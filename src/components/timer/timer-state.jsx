@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { isEmptyObject } from '../../shared/isEmpty';
 
 class TimerState extends React.Component {
 
@@ -30,19 +31,27 @@ class TimerState extends React.Component {
   }
 
   render() {
+    const { namedExercise } = this.props;
     return (
       <>
-        <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
-        <p className="state">{this.namedState()}</p>
-        <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
-        <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
-          {this.upcomingState().map((test, i) => (
-            i > this.props.currentRound && (
-              <li key={i}>{test}</li>
-            )
-          ))}
-          <div className="gradientback" />
-        </ul>
+      {!isEmptyObject(namedExercise) && (
+        <p className="state--empty">Add Exercises</p>
+      )} 
+      {isEmptyObject(namedExercise) && (
+        <>
+          <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
+          <p className="state">{this.namedState()}</p>
+          <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
+          <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
+            {this.upcomingState().map((test, i) => (
+              i > this.props.currentRound && (
+                <li key={i}>{test}</li>
+              )
+            ))}
+            <div className="gradientback" />
+          </ul>
+        </>
+      )}
       </>
     );
   }

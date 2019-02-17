@@ -19,11 +19,21 @@ form {
 
 .form-inputs {
   margin: 14px 0 22px 0;
+
+  @media (min-width: 992px) {
+    margin-bottom: 14px;
+  }
+
   label {
     display: block;
     margin-bottom: .5rem;
     text-align: left;
     font-size: 1.6rem;
+
+    @media (min-width: 992px) {
+      display: inline-block;
+      min-width: 200px;
+    }
   }
   input {
     display: block;
@@ -31,6 +41,18 @@ form {
     width: 100%;
     padding: 6px 10px;
     border-radius: 4px;
+
+    @media (min-width: 992px) {
+      &.shorter {
+        display: inline-block;
+        width: auto;
+        border-radius: 0;
+        border: 0;
+        border-bottom: 2px solid #ddd;
+        max-width: 80px;
+        margin-left: 6px;
+      }
+    }
   }
 }
 
@@ -46,5 +68,21 @@ form {
 .exercises {
   @media (min-width: 992px) {
     margin-top: 50px;
+  }
+}
+
+.combinedBtnInput {
+  position: relative;
+  button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 32px;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
