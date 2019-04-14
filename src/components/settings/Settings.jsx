@@ -13,9 +13,14 @@ class Settings extends Component {
       workTime: '',
       rounds: '',
       exercises: '',
+      saving: false,
+      typing: false,
     }
     this.handleInput = this.handleInput.bind(this);
     this.handleListedInput = this.handleListedInput.bind(this);
+    this.showSavingStatus = this.showSavingStatus.bind(this);
+    this.typingFlagOn = this.typingFlagOn.bind(this);
+    this.typingFlagOn = this.typingFlagOn.bind(this);
   }
 
   componentDidMount() {
@@ -49,10 +54,38 @@ class Settings extends Component {
 
   handleListedInput(ev) {
     const { exercises } = this.state;
+    const { onUpdateExercise } = this.props;
+    const { value } = ev.target;
     const index = ev.target.getAttribute('data-index');
     const name = 'name';
-    [...exercises][index][name] = ev.target.value;
+    [...exercises][index][name] = value;
     this.forceUpdate();
+    setTimeout(() => {
+      onUpdateExercise(value);
+      this.showSavingStatus();
+    }, 2500);
+  }
+
+  showSavingStatus() {
+    this.setState({ saving: true }, null);
+    setTimeout(() => {
+      this.setState({ saving: false });
+      console.log('saving');
+    }, 1000);
+  }
+
+  typingFlagOn() {
+    const { typing } = this.state;
+    if (!typing) {
+      this.setState({ typing: true });
+    }
+  }
+
+  typingFlagOff() {
+    const { typing } = this.state;
+    if (typing) {
+      this.setState({ typing: false });
+    }
   }
   
 
@@ -60,13 +93,13 @@ class Settings extends Component {
     const {
       onUpdateTime,
       onAddExercise,
-      onUpdateExercise,
     } = this.props;
     const {
       exercises,
       restTime,
       workTime,
       rounds,
+      saving,
     } = this.state;
     
     return (
@@ -94,11 +127,11 @@ class Settings extends Component {
                 <div key={exercise + index} style={{ margin: '10px 0' }}>
                   <label htmlFor="exercises" style={{ marginBottom: '6px' }}>Exercise {index + 1}:</label>
                   <div className="combinedBtnInput">
-                    <input type="text" name={exercise.name} id={exercise.name} placeholder={`Exercise ${index + 1}`} value={exercises[index].name} data-index={index} onChange={this.handleListedInput} />
-                    <button className="btn" onClick={() => onUpdateExercise(exercises[index].name, exercises[index].id)} type="button">Save Exercise</button>
+                    <input type="text" name={exercise.name} placeholder={`Exercise ${index + 1}`} value={exercises[index].name} data-index={index} onChange={this.handleListedInput} onFocus={this.typingFlagOn} onBlur={this.typingFlagOff} />
                   </div>
                 </div>
               ))}
+              <p>{saving ? 'Saving...' : '\u00A0'}</p>
               <button className="btn" onClick={() => onAddExercise()} type="button">Add Exercise</button>
             </div>
           </div>
@@ -135,7 +168,7 @@ const mapDispatchToProps = dispatch => {
     onFetchSession: () => dispatch({ type: actionTypes.FETCH_SESSION }),
     onUpdateTime: (work, rest, rounds) => dispatch({ type: actionTypes.UPDATE_TIMER, workTime: work, restTime: rest, rounds: rounds }),
     onAddExercise: (index) => dispatch({ type: actionTypes.ADD_EXERCISE, index: index }),
-    onUpdateExercise: (exercise, id) => dispatch({ type: actionTypes.UPDATE_EXERCISE, id: id, name: exercise })
+    onUpdateExercise: (name) => dispatch({ type: actionTypes.UPDATE_EXERCISE, id: name, name: name })
   };
 }
 
