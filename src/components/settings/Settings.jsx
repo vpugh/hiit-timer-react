@@ -14,13 +14,7 @@ class Settings extends Component {
       rounds: '',
       exercises: '',
       saving: false,
-      typing: false,
     }
-    this.handleInput = this.handleInput.bind(this);
-    this.handleListedInput = this.handleListedInput.bind(this);
-    this.showSavingStatus = this.showSavingStatus.bind(this);
-    this.typingFlagOn = this.typingFlagOn.bind(this);
-    this.typingFlagOn = this.typingFlagOn.bind(this);
   }
 
   componentDidMount() {
@@ -31,61 +25,44 @@ class Settings extends Component {
       workTime,
       rounds,
       exercises,
-    })
+    }, null)
   }
 
   componentDidUpdate(prevProps) {
     const { onFetchSession, exercises } = this.props;
     if (prevProps.exercises !== exercises) {
-      this.setState({
-        exercises,
-      });
+      this.setState({ exercises });
       onFetchSession();
     }
   }
 
-  handleInput(ev) {
+  handleInput = (ev) => {
     if (/^-?\d*$/.test(ev.target.value) === true) {
-      this.setState({
-        [ev.target.name]: ev.target.value,
-      })
+      this.setState({ [ev.target.name]: ev.target.value })
     }
   }
 
-  handleListedInput(ev) {
+  handleListedInput = (ev) => {
     const { exercises } = this.state;
     const { onUpdateExercise } = this.props;
     const { value } = ev.target;
     const index = ev.target.getAttribute('data-index');
-    const name = 'name';
-    [...exercises][index][name] = value;
-    this.forceUpdate();
-    setTimeout(() => {
-      onUpdateExercise(value);
-      this.showSavingStatus();
-    }, 2500);
+    const updateExercise = [...exercises];
+    updateExercise[index].name = value;
+    onUpdateExercise(value);
   }
 
-  showSavingStatus() {
+  handleSaving = () => {
     this.setState({ saving: true }, null);
     setTimeout(() => {
       this.setState({ saving: false });
-      console.log('saving');
-    }, 1000);
+    }, 500);
   }
 
-  typingFlagOn() {
-    const { typing } = this.state;
-    if (!typing) {
-      this.setState({ typing: true });
-    }
-  }
-
-  typingFlagOff() {
-    const { typing } = this.state;
-    if (typing) {
-      this.setState({ typing: false });
-    }
+  handleDeletion = (ev, index) => {
+    const { onDeleteExercise } = this.props;
+    ev.preventDefault();
+    onDeleteExercise(index);
   }
   
 
@@ -127,11 +104,14 @@ class Settings extends Component {
                 <div key={exercise + index} style={{ margin: '10px 0' }}>
                   <label htmlFor="exercises" style={{ marginBottom: '6px' }}>Exercise {index + 1}:</label>
                   <div className="combinedBtnInput">
-                    <input type="text" name={exercise.name} placeholder={`Exercise ${index + 1}`} value={exercises[index].name} data-index={index} onChange={this.handleListedInput} onFocus={this.typingFlagOn} onBlur={this.typingFlagOff} />
+                    <input type="text" name={exercise.name} placeholder={`Exercise ${index + 1}`} value={exercises[index].name} data-index={index} onChange={this.handleListedInput} onBlur={this.handleSaving} />
+                    <button className="deleteExercise" role="button" onClick={ev => this.handleDeletion(ev, index)}>Delete</button>
                   </div>
                 </div>
               ))}
-              <p>{saving ? 'Saving...' : '\u00A0'}</p>
+              {saving && (
+                <p>Saving...</p>
+              )}
               <button className="btn" onClick={() => onAddExercise()} type="button">Add Exercise</button>
             </div>
           </div>
@@ -168,7 +148,8 @@ const mapDispatchToProps = dispatch => {
     onFetchSession: () => dispatch({ type: actionTypes.FETCH_SESSION }),
     onUpdateTime: (work, rest, rounds) => dispatch({ type: actionTypes.UPDATE_TIMER, workTime: work, restTime: rest, rounds: rounds }),
     onAddExercise: (index) => dispatch({ type: actionTypes.ADD_EXERCISE, index: index }),
-    onUpdateExercise: (name) => dispatch({ type: actionTypes.UPDATE_EXERCISE, id: name, name: name })
+    onUpdateExercise: (name) => dispatch({ type: actionTypes.UPDATE_EXERCISE, id: name, name: name }),
+    onDeleteExercise: (index) => dispatch({ type: actionTypes.DELETE_EXERCISE, index: index })
   };
 }
 

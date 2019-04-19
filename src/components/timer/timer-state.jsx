@@ -32,26 +32,26 @@ class TimerState extends React.Component {
 
   render() {
     const { namedExercise } = this.props;
+    const emptyName = namedExercise.map(exercise => Object.values(exercise)[1]).toString() !== '';
+    if (!isEmptyObject(namedExercise)) {
+      return <p className="state--empty">Add Exercises</p>;
+    }
+    if (!emptyName) {
+      return <p className="state--empty">Add Exercises</p>;
+    }
     return (
       <>
-      {!isEmptyObject(namedExercise) && (
-        <p className="state--empty">Add Exercises</p>
-      )} 
-      {isEmptyObject(namedExercise) && (
-        <>
-          <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
-          <p className="state">{this.namedState()}</p>
-          <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
-          <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
-            {this.upcomingState().map((test, i) => (
-              i > this.props.currentRound && (
-                <li key={i}>{test}</li>
-              )
-            ))}
-            <div className="gradientback" />
-          </ul>
-        </>
-      )}
+        <h3 className="state--subtitle">Current Exercise | {this.currentStage()}</h3>
+        <p className="state">{this.namedState()}</p>
+        <h3 className="state--subtitle" style={{ marginTop: '2rem' }}>Up Next</h3>
+        <ul className="upcoming" style={{ textTransform: 'capitalize' }}>
+          {this.upcomingState().map((test, i) => (
+            i > this.props.currentRound && (
+              <li key={i}>{test}</li>
+            )
+          ))}
+          <div className="gradientback" />
+        </ul>
       </>
     );
   }
