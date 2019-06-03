@@ -29,7 +29,7 @@ module.exports = {
     filename: 'bundle-[hash].js',
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
       '~': path.resolve(__dirname, 'src'),
     },
@@ -37,8 +37,10 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(jsx?)$/,
-        use: 'babel-loader',
+        test: /\.(t|j)sx?$/,
+        use: { 
+          loader: 'awesome-typescript-loader' 
+        },
         exclude: [/node_modules/],
       },
       {
@@ -59,6 +61,11 @@ module.exports = {
       {
         test: /\.mp3$/,
         use: 'file-loader'
+      },
+      { 
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
       }
     ],
   },
@@ -80,7 +87,7 @@ module.exports = {
       },
     },
   },
-
+  devtool: "source-map",
   devServer: {
     port: 3000,
     historyApiFallback: true,

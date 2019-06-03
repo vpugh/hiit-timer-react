@@ -1,16 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { IExercise } from '../../interfaces';
 import { isEmptyObject } from '../../shared/isEmpty';
 
-class TimerState extends React.Component {
+interface ITimerStateProps {
+  currentRound: number,
+  nameTestArray: number[],
+  namedExercise: IExercise[],
+  totalRounds: number,
+  totalExercises: number[],
+}
+
+class TimerState extends React.Component<ITimerStateProps, {}> {
 
   namedState() {
     const { currentRound, nameTestArray, namedExercise } = this.props;
-    const circuit = Math.ceil((currentRound + 1) / (namedExercise.length * 2));
-    if (nameTestArray[currentRound + 1] <= namedExercise.length * 2) {
+    const circuit = Math.ceil((currentRound + 1) / (Object.keys(namedExercise).length * 2));
+    if (nameTestArray[currentRound + 1] <= Object.keys(namedExercise).length * 2) {
       return nameTestArray[currentRound];
     } else {
-      return nameTestArray[currentRound - namedExercise.length * 2 * (circuit - 1)];
+      return nameTestArray[currentRound - Object.keys(namedExercise).length * 2 * (circuit - 1)];
     }
   }
 
@@ -26,7 +34,7 @@ class TimerState extends React.Component {
 
   currentStage() {
     const { currentRound, namedExercise, totalRounds } = this.props;
-    const circuit = Math.ceil((+currentRound + 1) / (namedExercise.length * 2));
+    const circuit = Math.ceil((+currentRound + 1) / (Object.keys(namedExercise).length * 2));
     return `Round ${circuit}/${totalRounds}`;
   }
 
@@ -56,11 +64,5 @@ class TimerState extends React.Component {
     );
   }
 }
-
-TimerState.propTypes = {
-  currentRound: PropTypes.number.isRequired,
-  totalExercises: PropTypes.array.isRequired,
-  namedExercise: PropTypes.array.isRequired,
-};
 
 export default TimerState;
