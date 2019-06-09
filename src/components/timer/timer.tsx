@@ -2,9 +2,9 @@ import React from 'react';
 import './timer.scss';
 import TimerState from './timer-state';
 import { IExercise } from '../../interfaces';
-// import NewBeep from '../../assets/sounds/beep-v2.mp3';
-// import NewAirhorn from '../../assets/sounds/airhorn.mp3';
-// import NewDing from '../../assets/sounds/ding.mp3';
+import NewBeep from '../../assets/sounds/beep-v2.mp3';
+import NewAirhorn from '../../assets/sounds/airhorn.mp3';
+import NewDing from '../../assets/sounds/ding.mp3';
 
 interface ITimerProps {
   exercises: IExercise[],
@@ -28,7 +28,11 @@ interface ITimerState {
 
 
 class Timer extends React.Component<ITimerProps, ITimerState> {
-  interval:number;
+  interval:any;
+  timerID:number;
+  beep: string;
+  ding: string;
+  airhorn: string;
   constructor(props) {
     super(props);
     this.state = {
@@ -41,6 +45,9 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
       isTimerRunning: false,
       isTimerPaused: true,
     };
+    this.beep = NewBeep;
+    this.ding = NewDing;
+    this.airhorn = NewAirhorn;
   }
 
   componentDidMount() {
@@ -49,11 +56,15 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
     this.createStages();
     this.createExercise();
   }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
   
   // Generate rounds and Exercise Arrays
   createStages = () => {
     const { totalStages } = this.state;
-    for (let i:number = 0; i < this.props.timer.rounds; i += 1) {
+    for (let i:number = 0; i < this.props.timer[0].rounds; i += 1) {
       if (i) { totalStages.push(i) }
     }
   }
@@ -81,7 +92,7 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
   
   // generate total # rounds
   roundTotal() {
-    return (Object.keys(this.props.exercises).length * 2) * this.props.timer.rounds - 1;
+    return (Object.keys(this.props.exercises).length * 2) * this.props.timer[0].rounds - 1;
   }
   
   // Control exercise time display
@@ -94,9 +105,7 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
     }
   }
 
-  isEven = (num) => {
-    return num % 2 === 0;
-  }
+  isEven = (num) => num % 2 === 0
 
   // Timer Controls
 
@@ -105,22 +114,25 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
       isTimerRunning: true,
       isTimerPaused: false,
     });
-    this.interval = window.setInterval(() => this.countdown(),1000);
+    // @ts-ignore
+    this.interval = setInterval(() => this.countdown(),1000);
   }
 
   timerPause = () => {
     this.setState({
       isTimerRunning: false,
       isTimerPaused: true,
-    }, clearInterval(this.interval));
+      // @ts-ignore
+    },clearInterval(this.interval));
   }
   
   timerReset = () => {
     this.setState({
       isTimerRunning: false,
       isTimerPaused: false,
-      totalWorkoutTime: this.props.timer.workTime,
+      totalWorkoutTime: this.props.timer[0].workTime,
       currentRound: 0,
+      // @ts-ignore
     }, clearInterval(this.interval));
   }
 
@@ -129,13 +141,16 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
     const correctCurrentRound = currentRound + 1;
     if (totalWorkoutTime === 0 && this.roundTotal() === correctCurrentRound) {
       // Timer is done. TotalTime is 0, totalRounds equals the currentNumber
+      this.hornSound();
       this.timerReset();
     } else if (totalWorkoutTime === 0 && this.roundTotal() !== correctCurrentRound) {
       // End of current round, onto next round. Clear ticking (interval), set next round, turn ticking back on.
+      this.dingSound();
       clearInterval(this.interval);
       this.nextRound();
-      this.interval = window.setInterval(() => this.countdown(),1000);
+      this.interval = setInterval(() => this.countdown(),1000);
     } else if ( totalWorkoutTime <= 7 && totalWorkoutTime !== 0) {
+      this.beepSound();
       this.setState({ totalWorkoutTime: totalWorkoutTime - 1 });
     } else {
       this.setState({ totalWorkoutTime: totalWorkoutTime - 1 });
@@ -150,12 +165,47 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
     // Checks which to display, exercise or rest
     if (!this.isEven(currentRound)) {
       // 1,3,5,7,etc (ODD) are exercise
-      this.setState({ totalWorkoutTime: this.props.timer.workTime });
+      this.setState({ totalWorkoutTime: this.props.timer[0].workTime });
     }
     if (this.isEven(currentRound)) {
       // 2,4,6,8,etc (EVEN) are rest
-      this.setState({ totalWorkoutTime: this.props.timer.restTime });
+      this.setState({ totalWorkoutTime: this.props.timer[0].restTime });
     }
+  }
+
+
+  beepSound = () => {
+    if (this.state.isTimerRunning) {
+      // @ts-ignore
+      this.refs.audio.play();
+    } else {
+      // @ts-ignore
+      this.refs.audio.pause();
+    }
+  }
+
+  dingSound = () => {
+    if (this.state.isTimerRunning) {
+      // @ts-ignore
+      this.refs.audioDing.play();
+    } else {
+      // @ts-ignore
+      this.refs.audioDing.pause();
+    }
+  }
+
+  hornSound = () => {
+    if (this.state.isTimerRunning) {
+      // @ts-ignore
+      this.refs.audioHorn.play();
+    }
+  }
+
+  sound = (mp3) => {
+    const audio_tag = React.createRef;
+    return (
+      <audio ref={audio_tag} src={mp3} controls autoPlay />
+    );
   }
 
   render() {
@@ -169,6 +219,9 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
     return (
       <div className="timer-body">
         <div className="timer">{this.exerciseRoundTime()}</div>
+        <audio ref="audio" src={NewBeep} preload="auto" />
+        <audio ref="audioDing" src={NewDing} preload="auto" />
+        <audio ref="audioHorn" src={NewAirhorn} preload="auto" />
         <div className="buttons">
           {!isTimerRunning && <button onClick={this.timerPlay}>Start <span className="fa fa-play"></span></button>}
           {isTimerRunning && <button onClick={this.timerPause}>Pause <span className="fa fa-pause"></span></button>}
@@ -178,7 +231,7 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
           totalExercises={totalExercises}
           nameTestArray={nameTestArray}
           namedExercise={this.props.exercises}
-          totalRounds={this.props.timer.rounds}
+          totalRounds={this.props.timer[0].rounds}
         />
       </div>
     )
