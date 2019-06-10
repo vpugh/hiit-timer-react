@@ -1,4 +1,4 @@
-import React, {createContext, useReducer} from 'react';
+import React, {createContext, useReducer, Fragment} from 'react';
 import { IState, IExercise, ITimer } from '../interfaces';
 import * as actionTypes from './actions/action-types';
 
@@ -22,6 +22,14 @@ function reducer(state, action) {
         exercises: action.exercises,
       }
     case actionTypes.ADD_EXERCISE:
+      return {
+        ...state,
+        exercises: state.exercises.concat({
+          name: '',
+          index: state.exercises.length,
+        }),
+      }
+    case actionTypes.DELETE_EXERCISE:
       return {
         ...state,
         exercises: state.exercises.concat({
@@ -69,5 +77,8 @@ export function StoreProvider(props) {
       }
     ]
   });
-  return <Store.Provider value={{state, dispatch}}>{props.children}</Store.Provider>
+  return <Store.Provider value={{state, dispatch}}><Fragment>
+    {console.log('Store', state)}
+    {props.children}
+  </Fragment></Store.Provider>
 }

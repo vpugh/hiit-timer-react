@@ -3,12 +3,11 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import Timer from './components/timer/timer.tsx';
 import Login from './components/login/login';
 import Settings from './components/settings/Settings';
-import { connect } from 'react-redux';
 import { Store } from './redux/Store';
 
 export function Main() {
 
-  const {state} = useContext(Store);
+  const {state, dispatch } = useContext(Store);
   const activeClass = (route) => {
     return location.pathname === route ? 'active' : null;
   }
@@ -23,7 +22,7 @@ export function Main() {
         />
         <Route
           path="/settings"
-          component={Settings}
+          render={() => (<Settings state={state} dispatch={dispatch} />)}
         />
         <Route
           path="/login"

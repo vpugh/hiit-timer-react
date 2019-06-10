@@ -1,33 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './timer.scss';
 import TimerState from './timer-state';
-import { IExercise } from '../../interfaces';
+import { ITimerProps, ITimerState } from '../../interfaces';
 import NewBeep from '../../assets/sounds/beep-v2.mp3';
 import NewAirhorn from '../../assets/sounds/airhorn.mp3';
 import NewDing from '../../assets/sounds/ding.mp3';
 
-interface ITimerProps {
-  exercises: IExercise[],
-  timer: {
-    restTime: number,
-    workTime: number,
-    rounds: number,
-  }
-}
 
-interface ITimerState {
-  totalWorkoutTime: number,
-  totalRestTime: number, 
-  currentRound: number,
-  totalStages: number[],
-  totalExercises: number[],
-  nameTestArray: number[],
-  isTimerRunning: boolean,
-  isTimerPaused: boolean,
-}
-
-
-class Timer extends React.Component<ITimerProps, ITimerState> {
+class Timer extends Component <ITimerProps, ITimerState> {
   interval:any;
   timerID:number;
   beep: string;
@@ -51,7 +31,6 @@ class Timer extends React.Component<ITimerProps, ITimerState> {
   }
 
   componentDidMount() {
-    console.log('Test', this.props.timer[0]);
     this.createExerciseNames();
     this.createStages();
     this.createExercise();
