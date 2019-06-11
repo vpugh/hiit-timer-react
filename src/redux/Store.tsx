@@ -30,12 +30,10 @@ function reducer(state, action) {
         }),
       }
     case actionTypes.DELETE_EXERCISE:
+      const updatedExercises = state.exercises.filter(session => session.index !== action.index);
       return {
         ...state,
-        exercises: state.exercises.concat({
-          name: '',
-          index: state.exercises.length,
-        }),
+        exercises: updatedExercises,
       }
     case actionTypes.UPDATE_EXERCISE:
       return {
@@ -50,11 +48,11 @@ function reducer(state, action) {
     case actionTypes.UPDATE_TIMER:
       return {
         ...state,
-        timer: {
+        timer: [{
           restTime: action.restTime,
           workTime: action.workTime,
           rounds: action.rounds,
-        }
+        }]
       }
     default:
       return state;
@@ -71,14 +69,13 @@ export function StoreProvider(props) {
     ],
     timer: [
       {
-        restTime: 2,
+        restTime: 6,
         workTime: 4,
         rounds: 2,
       }
     ]
   });
   return <Store.Provider value={{state, dispatch}}><Fragment>
-    {console.log('Store', state)}
     {props.children}
   </Fragment></Store.Provider>
 }

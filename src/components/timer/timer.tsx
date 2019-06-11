@@ -18,7 +18,7 @@ class Timer extends Component <ITimerProps, ITimerState> {
     this.state = {
       totalWorkoutTime: this.props.timer[0].workTime,
       totalRestTime: this.props.timer[0].restTime,
-      currentRound: this.props.timer[0].rounds,
+      currentRound: 0,
       totalStages: [],
       totalExercises: [],
       nameTestArray: [],

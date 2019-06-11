@@ -36,6 +36,14 @@ export interface ITimerState {
   isTimerPaused: boolean,
 }
 
+export interface ITimerStateProps {
+  currentRound: number,
+  nameTestArray: number[],
+  namedExercise: IExercise[],
+  totalRounds: number,
+  totalExercises: number[],
+}
+
 // Settings Page Interfaces
 
 export interface ISettingsProps {
@@ -54,4 +62,12 @@ export interface ISettingsState {
   rounds: number,
   exercises: IExercise[],
   saving: boolean,
+}
+
+export interface IFormInputsProps {
+  title: string,
+  name: string,
+  id: string,
+  value: string,
+  onChange: any,
 }
