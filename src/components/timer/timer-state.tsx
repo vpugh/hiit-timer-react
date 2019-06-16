@@ -18,10 +18,6 @@ export default function TimerState(props):JSX.Element {
     return list.slice(0, -1);
   }
 
-  const makeRepeated = (arr, repeats) => {
-    Array.from({ length: repeats }, () => arr).flat();
-  }
-
   const currentStage = () => {
     const { currentRound, namedExercise, totalRounds } = props;
     const circuit = Math.ceil((+currentRound + 1) / (Object.keys(namedExercise).length * 2));

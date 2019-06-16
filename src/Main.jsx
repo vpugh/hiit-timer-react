@@ -8,9 +8,6 @@ import { Store } from './redux/Store';
 export function Main() {
 
   const {state, dispatch } = useContext(Store);
-  const activeClass = (route) => {
-    return location.pathname === route ? 'active' : null;
-  }
   
   return (
     <main>
@@ -22,7 +19,7 @@ export function Main() {
         />
         <Route
           path="/settings"
-          render={() => (<Settings state={state} dispatch={dispatch} />)}
+          render={() => (<Settings />)}
         />
         <Route
           path="/login"

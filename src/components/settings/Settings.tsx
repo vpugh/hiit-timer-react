@@ -56,10 +56,9 @@ export default function Settings():JSX.Element {
         <button
           type="button"
           className="btn"
-          onClick={
-            () => dispatch({ type: 'UPDATE_TIMER', restTime: rest, workTime: work, rounds: round})}
-          >
-            Update Timer
+          onClick={() => dispatch({ type: 'UPDATE_TIMER', restTime: rest, workTime: work, rounds: round})}
+        >
+          Update Timer
         </button>
         <div className="exercises">
           <h3>Exercises:</h3>
