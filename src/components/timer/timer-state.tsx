@@ -3,18 +3,18 @@ import { isEmptyObject } from '../../shared/isEmpty';
 
 export default function TimerState(props):JSX.Element {
   const namedState = () => {
-    const { currentRound, nameTestArray, namedExercise } = props;
+    const { currentRound, exerciseNames, namedExercise } = props;
     const circuit = Math.ceil((currentRound + 1) / (Object.keys(namedExercise).length * 2));
-    if (nameTestArray[currentRound + 1] <= Object.keys(namedExercise).length * 2) {
-      return nameTestArray[currentRound];
+    if (exerciseNames[currentRound + 1] <= Object.keys(namedExercise).length * 2) {
+      return exerciseNames[currentRound];
     } else {
-      return nameTestArray[currentRound - Object.keys(namedExercise).length * 2 * (circuit - 1)];
+      return exerciseNames[currentRound - Object.keys(namedExercise).length * 2 * (circuit - 1)];
     }
   }
 
   const upcomingState = () => {
-    const { nameTestArray, totalRounds } = props;
-    const list = [].concat(...Array(totalRounds).fill(nameTestArray))
+    const { exerciseNames, totalRounds } = props;
+    const list = [].concat(...Array(totalRounds).fill(exerciseNames))
     return list.slice(0, -1);
   }
 
@@ -29,9 +29,11 @@ export default function TimerState(props):JSX.Element {
     if (!isEmptyObject(props.namedExercise)) {
       return <p className="state--empty">Add Exercises</p>;
     }
+
     if (!emptyName) {
       return <p className="state--empty">Add Exercises</p>;
     }
+
     return (
       <>
         <h3 className="state--subtitle">Current Exercise | {currentStage()}</h3>
