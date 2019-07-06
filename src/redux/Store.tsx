@@ -25,8 +25,8 @@ function reducer(state, action) {
       return {
         ...state,
         exercises: state.exercises.concat({
-          name: '',
           index: state.exercises.length,
+          name: '',
         }),
       }
     case actionTypes.DELETE_EXERCISE:

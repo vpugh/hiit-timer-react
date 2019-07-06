@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './settings.scss';
 import { IExercise } from '../../interfaces';
 import { Store } from '../../redux/Store';
@@ -6,11 +6,15 @@ import FormInputs from './formInputs';
 import TextInputs from './textInputs';
 
 export default function Settings():JSX.Element {
-  const {state, dispatch } = useContext(Store);
+  const {state, dispatch} = useContext(Store);
   const [saving, setSaving] = useState(false);
   const [rest, setRest] = useState(state.timer[0].restTime);
   const [work, setWork] = useState(state.timer[0].workTime);
   const [round, setRound] = useState(state.timer[0].rounds);
+
+  useEffect(() => {
+    localStorage.setItem('exercises', JSON.stringify(state.exercises))
+  }, [state.exercises]);
 
   const handleInput = (ev:React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = ev.currentTarget;

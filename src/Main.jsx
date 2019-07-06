@@ -8,6 +8,17 @@ import { Store } from './redux/Store';
 export function Main() {
 
   const {state, dispatch } = useContext(Store);
+
+  // const returnLocalData = () => {
+  //   const localData = localStorage.getItem('exercises');
+  //   return localData ? JSON.parse(localData) : [];
+  // }
+
+  // console.log(state, returnLocalData());
+
+  // if (returnLocalData !== '') {
+  //   state.exercises = returnLocalData();
+  // }
   
   return (
     <main>
