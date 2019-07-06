@@ -11,6 +11,10 @@ const loopThroughUseState = (object: any, setState: any) => {
     setState(prev => ([...prev, i]));
   }
 }
+
+const objectKeysLength = content => {
+  return Object.keys(content).length
+}
  
 export default function Timer():JSX.Element {
   const {state} = useContext(Store);
@@ -42,17 +46,15 @@ export default function Timer():JSX.Element {
 
   const createStages = () => loopThroughUseState(state.timer[0].rounds, setTotalStages);
 
-  const createExercise = () => loopThroughUseState(Object.keys(state.exercises).length * 2, setTotalExercises);
+  const createExercise = () => loopThroughUseState(objectKeysLength(state.exercises) * 2, setTotalExercises);
 
   const createExerciseNames = () => {
-    for (let i:number = 0; i < Object.keys(state.exercises).length; i += 1) {
+    for (let i:number = 0; i < objectKeysLength(state.exercises); i += 1) {
       setExerciseNames(prevExerciseNames => ([...prevExerciseNames, state.exercises[i].name, 'rest']));
     }
   }
 
-  const roundTotal = () => {
-    return (Object.keys(state.exercises).length * 2) * state.timer[0].rounds - 1;
-  }
+  const roundTotal = () => (objectKeysLength(state.exercises) * 2) * state.timer[0].rounds - 1;
 
   const exerciseRoundTime = () => {
     if (totalWorkoutTime >= 10) {
