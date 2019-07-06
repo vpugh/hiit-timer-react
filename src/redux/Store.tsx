@@ -1,11 +1,23 @@
-import React, {createContext, useReducer, Fragment} from 'react';
-import { IState, IExercise, ITimer } from '../interfaces';
+import React, {createContext, useReducer, useEffect, Fragment} from 'react';
+import { IState } from '../interfaces';
 import * as actionTypes from './actions/action-types';
 
 const initialState:IState = {
   exercises:[],
   timer:[],
 }
+
+const timerDefault = [{
+  restTime: 6,
+  workTime: 4,
+  rounds: 2,
+}]
+
+const exerciseDefault = [{
+  index: 0,
+  name: '', 
+}]
+
 
 export const Store = createContext<IState | any>(initialState);
 
@@ -60,21 +72,23 @@ function reducer(state, action) {
 }
 
 export function StoreProvider(props) {
-  const [state, dispatch] = useReducer(reducer, {
-    exercises: [
-      {
-        index: 0,
-        name: '', 
-      }
-    ],
-    timer: [
-      {
-        restTime: 6,
-        workTime: 4,
-        rounds: 2,
-      }
-    ]
+  const [state, dispatch] = useReducer(reducer, {}, () => {
+    const localData = localStorage.getItem('exercises');
+    return localData 
+    ? (
+        {
+          exercises: JSON.parse(localData),
+          timer: timerDefault,
+        }
+      )
+    : (
+        {
+          exercises: exerciseDefault,
+          timer: timerDefault,
+        }
+      )
   });
+  
   return <Store.Provider value={{state, dispatch}}><Fragment>
     {props.children}
   </Fragment></Store.Provider>
