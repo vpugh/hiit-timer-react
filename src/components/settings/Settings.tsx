@@ -24,13 +24,13 @@ export default function Settings():JSX.Element {
     const { value, name } = ev.currentTarget;
     if (/^-?\d*$/.test(value) === true) {
       if (name === 'workoutTime') {
-        setWork(+value);
+        setWork(value);
       }
       if (name === 'restTime') {
-        setRest(+value);
+        setRest(value);
       }
       if (name === 'rounds') {
-        setRound(+value);
+        setRound(value);
       }
     }
   }

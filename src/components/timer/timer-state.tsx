@@ -3,12 +3,12 @@ import { isEmptyObject } from '../../shared/isEmpty';
 
 export default function TimerState(props):JSX.Element {
   const namedState = () => {
-    const { currentRound, exerciseNames, namedExercise, objectKeysLength } = props;
-    const circuit = Math.ceil((currentRound + 1) / (objectKeysLength(namedExercise) * 2));
-    if (exerciseNames[currentRound + 1] <= objectKeysLength(namedExercise) * 2) {
+    const { currentRound, exerciseNames, namedExercise } = props;
+    const circuit = Math.ceil((currentRound + 1) / (Object.keys(namedExercise).length * 2));
+    if (exerciseNames[currentRound + 1] <= Object.keys(namedExercise).length * 2) {
       return exerciseNames[currentRound];
     } else {
-      return exerciseNames[currentRound - objectKeysLength(namedExercise) * 2 * (circuit - 1)];
+      return exerciseNames[currentRound - Object.keys(namedExercise).length * 2 * (circuit - 1)];
     }
   }
 
@@ -19,8 +19,8 @@ export default function TimerState(props):JSX.Element {
   }
 
   const currentStage = () => {
-    const { currentRound, namedExercise, totalRounds, objectKeysLength } = props;
-    const circuit = Math.ceil((+currentRound + 1) / (objectKeysLength(namedExercise) * 2));
+    const { currentRound, namedExercise, totalRounds } = props;
+    const circuit = Math.ceil((+currentRound + 1) / (Object.keys(namedExercise).length * 2));
     return `Round ${circuit}/${totalRounds}`;
   }
 

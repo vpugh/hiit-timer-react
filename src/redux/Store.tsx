@@ -73,20 +73,38 @@ function reducer(state, action) {
 
 export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, {}, () => {
-    const localData = localStorage.getItem('exercises');
-    return localData 
-    ? (
+    const localDataExercise = localStorage.getItem('exercises');
+    const localDataTimer = localStorage.getItem('timer');
+    if (localDataExercise && localDataTimer) {
+      return (
         {
-          exercises: JSON.parse(localData),
+          exercises: JSON.parse(localDataExercise),
+          timer: JSON.parse(localDataTimer),
+        }
+      )
+    }
+    if (localDataExercise) {
+      return (
+        {
+          exercises: JSON.parse(localDataExercise),
           timer: timerDefault,
         }
       )
-    : (
+    }
+    if (localDataTimer) {
+      return (
         {
           exercises: exerciseDefault,
-          timer: timerDefault,
+          timer: JSON.parse(localDataTimer),
         }
       )
+    }
+    return (
+      {
+        exercises: exerciseDefault,
+        timer: timerDefault,
+      }
+    ) 
   });
   
   return <Store.Provider value={{state, dispatch}}><Fragment>
