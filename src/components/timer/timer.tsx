@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import './timer.scss';
 import TimerState from './timer-state';
-import { ITimerProps } from '../../interfaces';
+import { Store } from '../../redux/Store';
 import NewBeep from '../../assets/sounds/beep-v2.mp3';
 import NewAirhorn from '../../assets/sounds/airhorn.mp3';
 import NewDing from '../../assets/sounds/ding.mp3';
@@ -12,9 +12,10 @@ const loopThroughUseState = (object: any, setState: any) => {
   }
 }
  
-const Timer: React.FC<ITimerProps> = (props) => {
-  const [totalWorkoutTime, setTotalWorkoutTime] = useState<number>(props.timer[0].workTime);
-  const [totalRestTime, setTotalRestTime] = useState<number>(props.timer[0].restTime);
+export default function Timer():JSX.Element {
+  const {state, dispatch} = useContext(Store);
+  const [totalWorkoutTime, setTotalWorkoutTime] = useState<number>(state.timer[0].workTime);
+  const [totalRestTime, setTotalRestTime] = useState<number>(state.timer[0].restTime);
   const [currentRound, setCurrentRound] = useState<number>(0);
   const [totalStages, setTotalStages] = useState<number[]>([]);
   const [totalExercises, setTotalExercises] = useState<any[]>([]);
@@ -43,24 +44,18 @@ const Timer: React.FC<ITimerProps> = (props) => {
     return () => clearInterval(interval);
   }, [isTimerRunning, totalWorkoutTime, totalRestTime]);
 
-  const createStages = () => loopThroughUseState(props.timer[0].rounds, setTotalStages);
+  const createStages = () => loopThroughUseState(state.timer[0].rounds, setTotalStages);
 
-  const createExercise = () => loopThroughUseState(Object.keys(props.exercises).length * 2, setTotalExercises);
+  const createExercise = () => loopThroughUseState(Object.keys(state.exercises).length * 2, setTotalExercises);
 
   const createExerciseNames = () => {
-    for (let i:number = 0; i < Object.keys(props.exercises).length; i += 1) {
-      const exerciseLength:number = Object.keys(props.exercises).length - 1;
-      if (i === exerciseLength) {
-        setExerciseNames(prevExerciseNames => ([...prevExerciseNames, props.exercises[i].name]));
-      }
-      if (i !== exerciseLength) {
-        setExerciseNames(prevExerciseNames => ([...prevExerciseNames, props.exercises[i].name, 'rest']));
-      }
+    for (let i:number = 0; i < Object.keys(state.exercises).length; i += 1) {
+      setExerciseNames(prevExerciseNames => ([...prevExerciseNames, state.exercises[i].name, 'rest']));
     }
   }
 
   const roundTotal = () => {
-    return (Object.keys(props.exercises).length * 2) * props.timer[0].rounds - 1;
+    return (Object.keys(state.exercises).length * 2) * state.timer[0].rounds - 1;
   }
 
   const exerciseRoundTime = () => {
@@ -83,20 +78,20 @@ const Timer: React.FC<ITimerProps> = (props) => {
   
   const timerReset = () => {
     setIsTimerRunning(false);
-    setTotalWorkoutTime(props.timer[0].workTime);
+    setTotalWorkoutTime(state.timer[0].workTime);
     setCurrentRound(0);
   }
 
   const countdown = () => {
     const correctCurrentRound = currentRound + 1;
     if (totalWorkoutTime === 0 && roundTotal() === correctCurrentRound) {
-      this.hornSound();
+      // this.hornSound();
       timerReset();
     } else if (totalWorkoutTime === 0 && roundTotal() !== correctCurrentRound) {
-      this.dingSound();
+      // this.dingSound();
       nextRound();
     } else if ( totalWorkoutTime <= 7 && totalWorkoutTime !== 0) {
-      this.beepSound();
+      // this.beepSound();
       setTotalWorkoutTime(totalWorkoutTime - 1);
     } else {
       setTotalWorkoutTime(totalWorkoutTime - 1);
@@ -107,11 +102,11 @@ const Timer: React.FC<ITimerProps> = (props) => {
     setCurrentRound(currentRound + 1);
 
     if (!isEven(currentRound)) {
-      setTotalWorkoutTime(props.timer[0].workTime);
+      setTotalWorkoutTime(state.timer[0].workTime);
     }
 
     if (isEven(currentRound)) {
-      setTotalWorkoutTime(props.timer[0].restTime);
+      setTotalWorkoutTime(state.timer[0].restTime);
     }
   }
 
@@ -151,11 +146,9 @@ const Timer: React.FC<ITimerProps> = (props) => {
         currentRound={currentRound}
         totalExercises={totalExercises}
         exerciseNames={exerciseNames}
-        namedExercise={props.exercises}
-        totalRounds={props.timer[0].rounds}
+        namedExercise={state.exercises}
+        totalRounds={state.timer[0].rounds}
       />
     </div>
   );
 }
- 
-export default Timer;
