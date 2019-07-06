@@ -16,17 +16,21 @@ export default function Settings():JSX.Element {
     localStorage.setItem('exercises', JSON.stringify(state.exercises))
   }, [state.exercises]);
 
+  useEffect(() => {
+    localStorage.setItem('timer', JSON.stringify(state.timer))
+  }, [state.timer]);
+
   const handleInput = (ev:React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = ev.currentTarget;
     if (/^-?\d*$/.test(value) === true) {
       if (name === 'workoutTime') {
-        setWork(value);
+        setWork(+value);
       }
       if (name === 'restTime') {
-        setRest(value);
+        setRest(+value);
       }
       if (name === 'rounds') {
-        setRound(value);
+        setRound(+value);
       }
     }
   }

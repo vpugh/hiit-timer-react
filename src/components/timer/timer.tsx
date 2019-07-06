@@ -125,6 +125,7 @@ export default function Timer():JSX.Element {
         exerciseNames={exerciseNames}
         namedExercise={state.exercises}
         totalRounds={state.timer[0].rounds}
+        objectKeysLength={objectKeysLength}
       />
     </div>
   );
