@@ -13,18 +13,14 @@ const loopThroughUseState = (object: any, setState: any) => {
 }
  
 export default function Timer():JSX.Element {
-  const {state, dispatch} = useContext(Store);
+  const {state} = useContext(Store);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState<number>(state.timer[0].workTime);
-  const [totalRestTime, setTotalRestTime] = useState<number>(state.timer[0].restTime);
+  const [totalRestTime] = useState<number>(state.timer[0].restTime);
   const [currentRound, setCurrentRound] = useState<number>(0);
   const [totalStages, setTotalStages] = useState<number[]>([]);
   const [totalExercises, setTotalExercises] = useState<any[]>([]);
   const [exerciseNames, setExerciseNames] = useState<any[]>([]);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-
-  // this.beep = NewBeep;
-  // this.ding = NewDing;
-  // this.airhorn = NewAirhorn;
 
   useEffect(() => {
     createExerciseNames();
@@ -85,13 +81,13 @@ export default function Timer():JSX.Element {
   const countdown = () => {
     const correctCurrentRound = currentRound + 1;
     if (totalWorkoutTime === 0 && roundTotal() === correctCurrentRound) {
-      // this.hornSound();
+      {playAudio(NewAirhorn)}
       timerReset();
     } else if (totalWorkoutTime === 0 && roundTotal() !== correctCurrentRound) {
-      // this.dingSound();
+      {playAudio(NewDing)}
       nextRound();
     } else if ( totalWorkoutTime <= 7 && totalWorkoutTime !== 0) {
-      // this.beepSound();
+      {playAudio(NewBeep)}
       setTotalWorkoutTime(totalWorkoutTime - 1);
     } else {
       setTotalWorkoutTime(totalWorkoutTime - 1);
@@ -110,34 +106,13 @@ export default function Timer():JSX.Element {
     }
   }
 
-  const beepSound = () => {
-    if (isTimerRunning) {
-      this.refs.audio.play();
-    } else {
-      this.refs.audio.pause();
-    }
-  }
-
-  const dingSound = () => {
-    if (isTimerRunning) {
-      this.refs.audioDing.play();
-    } else {
-      this.refs.audioDing.pause();
-    }
-  }
-
-  const hornSound = () => {
-    if (isTimerRunning) {
-      this.refs.audioHorn.play();
-    }
+  const playAudio = src => {
+    new Audio(src).play();
   }
 
   return (
     <div className="timer-body">
       <div className="timer">{exerciseRoundTime()}</div>
-      {/* <audio ref="audio" src={NewBeep} preload="auto" />
-      <audio ref="audioDing" src={NewDing} preload="auto" />
-      <audio ref="audioHorn" src={NewAirhorn} preload="auto" /> */}
       <div className="buttons">
         {!isTimerRunning && <button onClick={timerPlay}>Start <span className="fa fa-play"></span></button>}
         {isTimerRunning && <button onClick={timerPaused}>Pause <span className="fa fa-pause"></span></button>}
