@@ -1,14 +1,11 @@
 @import "scss/reset";
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,600,700");
-@import "scss/theme-colors";
 
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
 body {
-  background-color: $primary-color;
-  background-image: $gradient;
   height: 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;

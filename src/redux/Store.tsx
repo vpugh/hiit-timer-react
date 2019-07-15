@@ -1,4 +1,4 @@
-import React, {createContext, useReducer, useEffect, Fragment} from 'react';
+import React, {createContext, useReducer, Fragment} from 'react';
 import { IState } from '../interfaces';
 import * as actionTypes from './actions/action-types';
 

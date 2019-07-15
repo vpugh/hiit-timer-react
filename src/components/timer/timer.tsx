@@ -5,6 +5,7 @@ import { Store } from '../../redux/Store';
 import NewBeep from '../../assets/sounds/beep-v2.mp3';
 import NewAirhorn from '../../assets/sounds/airhorn.mp3';
 import NewDing from '../../assets/sounds/ding.mp3';
+import { ThemeContext } from '../../contexts/ThemeContext';
 
 const loopThroughUseState = (object: any, setState: any) => {
   for (let i:number = 0; i < object; i += 1) {
@@ -14,6 +15,7 @@ const loopThroughUseState = (object: any, setState: any) => {
  
 export default function Timer():JSX.Element {
   const {state} = useContext(Store);
+  const theme:{ chosenTheme: string, options: string[], green: any, orange: any, purple: any, updateTheme: any} = useContext(ThemeContext);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState<number>(state.timer[0].workTime);
   const [totalRestTime] = useState<number>(state.timer[0].restTime);
   const [currentRound, setCurrentRound] = useState<number>(0);
@@ -21,6 +23,10 @@ export default function Timer():JSX.Element {
   const [totalExercises, setTotalExercises] = useState<any[]>([]);
   const [exerciseNames, setExerciseNames] = useState<any[]>([]);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+
+  const themeColor = theme.chosenTheme;
+  const accentColor = theme[themeColor].accent;
+  const btnText = theme[themeColor].bgLink;
 
   useEffect(() => {
     createExerciseNames();
@@ -114,8 +120,8 @@ export default function Timer():JSX.Element {
     <div className="timer-body">
       <div className="timer">{exerciseRoundTime()}</div>
       <div className="buttons">
-        {!isTimerRunning && <button onClick={timerPlay}>Start <span className="fa fa-play"></span></button>}
-        {isTimerRunning && <button onClick={timerPaused}>Pause <span className="fa fa-pause"></span></button>}
+        {!isTimerRunning && <button style={{ background: accentColor, color: btnText }} onClick={timerPlay}>Start <span className="fa fa-play"></span></button>}
+        {isTimerRunning && <button style={{ background: accentColor, color: btnText }} onClick={timerPaused}>Pause <span className="fa fa-pause"></span></button>}
       </div>
       <TimerState
         currentRound={currentRound}

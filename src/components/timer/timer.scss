@@ -106,8 +106,6 @@
 .buttons {
   margin: 0 auto 22px 0;
   button {
-    background-color: $primary-color;
-    color: darken($primary-color, 40%);
     padding: 15px 34px;
     border-radius: 3px;
     border: none;
@@ -123,7 +121,6 @@
       margin-bottom: 20px;
     }
     &:hover {
-      background-color: lighten($primary-color, 15%);
       box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.2);
       transform: translatey(-2px);
     }
