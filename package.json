@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/vpugh/hiit-timer-react#readme",
   "dependencies": {
-    "acorn": "^6.1.1",
+    "acorn": "^6.4.1",
     "auth0-js": "^9.9.0",
     "copy-webpack-plugin": "^4.6.0",
     "eslint": "^5.12.0",
